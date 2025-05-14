@@ -1,0 +1,31 @@
+// scss/components/_scroll-to-top.scss
+
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 24px;
+    line-height: 45px; // Vertically center icon
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    z-index: 990;
+
+    &:hover {
+        background-color: #e65c00; // Darker orange
+        transform: scale(1.1);
+    }
+
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+}

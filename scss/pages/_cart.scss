@@ -1,0 +1,310 @@
+// scss/pages/_cart.scss
+
+.cart-page-content { // Wrapper for main content on this page
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+    }
+}
+@media (min-width: 768px) {
+    .cart-page-content h1 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+}
+
+.cart-layout {
+    display: flex;
+    flex-direction: column; // Stack by default
+    gap: 25px;
+}
+@media (min-width: 992px) {
+    .cart-layout {
+        flex-direction: row;
+        gap: 30px;
+    }
+    .cart-items-column {
+        flex: 2; // Items take more space
+    }
+    .cart-summary-column {
+        flex: 1;
+    }
+}
+
+.cart-item {
+    display: grid;
+    // Mobile first: image, details, quantity/total/remove stacked below details
+    grid-template-columns: auto 1fr; // Image and details block
+    grid-template-rows: auto auto auto; // For mobile stacking of actions
+    align-items: center;
+    gap: 10px 15px; // row-gap column-gap
+    background-color: var(--card-background);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    box-shadow: var(--box-shadow);
+}
+
+.cart-item-image {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    grid-row: 1 / span 2; // Span two rows for image on mobile
+}
+
+.cart-item-details {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    h3 {
+        font-size: 1.05rem;
+        margin-bottom: 3px;
+        color: var(--text-color);
+    }
+    p {
+        font-size: 0.8rem;
+        color: #666;
+        margin: 0;
+    }
+}
+.item-customizations {
+    font-style: italic;
+    font-size: 0.75rem;
+    color: #777;
+}
+.item-unit-price {
+    font-size: 0.85rem;
+    color: #444;
+    margin-top: 2px;
+}
+
+.cart-item-quantity {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-self: start; // Align to start for mobile view
+    .quantity-value { // Styles from components/_forms.scss might apply
+        width: 30px;
+        font-size: 0.95rem;
+        padding: 3px;
+    }
+    .quantity-btn { // Styles from components/_forms.scss might apply
+        width: 30px;
+        height: 30px;
+        font-size: 1.1rem;
+    }
+}
+
+.cart-item-total {
+    grid-column: 2 / 3; // Below quantity on mobile
+    grid-row: 3 / 4;
+    font-weight: bold;
+    text-align: left; // Align left for mobile
+    font-size: 1.05rem;
+    margin-top: 5px;
+}
+
+.cart-item-remove {
+    grid-column: 1 / -1; // Full width button on mobile below everything
+    grid-row: 4 / 5; // Or adjust if total is also full width
+    background: none;
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    padding: 8px;
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+    text-align: center;
+
+    &:hover {
+        background-color: var(--error-color);
+        color: white;
+    }
+}
+
+@media (min-width: 600px) { // Adjust for slightly larger screens before full desktop
+    .cart-item {
+        grid-template-columns: auto 1fr auto auto auto; // Original desktop layout
+        grid-template-rows: auto; // Single row
+        align-items: center;
+    }
+    .cart-item-image { grid-row: 1 / 2; } // Back to single row span
+    .cart-item-details { grid-column: 2 / 3; grid-row: 1 / 2; }
+    .cart-item-quantity { grid-column: 3 / 4; grid-row: 1 / 2; justify-self: center; }
+    .cart-item-total { grid-column: 4 / 5; grid-row: 1 / 2; text-align: right; }
+    .cart-item-remove {
+        grid-column: 5 / 6; grid-row: 1 / 2;
+        justify-self: end; align-self: center;
+        font-size: 1.3rem; border: none; padding: 5px; margin-top: 0;
+        &:hover { background-color: transparent; color: #a01225;}
+    }
+}
+
+
+.cart-empty-message {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    display: none; // Shown by JS
+    p {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+}
+@media (min-width: 768px) {
+    .cart-empty-message p {
+        font-size: 1.2rem;
+    }
+}
+
+.cart-summary-column {
+    position: static; // Default for mobile
+    top: auto;
+}
+@media (min-width: 992px) {
+    .cart-summary-column {
+        position: sticky;
+        top: 90px; // Header height + padding
+        align-self: flex-start;
+    }
+}
+
+.cart-summary {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    h2 { // Added for summary heading, if desired
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+}
+@media (min-width: 768px) {
+    .cart-summary {
+        padding: 25px;
+        h2 { font-size: 1.5rem; margin-bottom: 20px; }
+    }
+}
+
+.promo-code-section {
+    display: flex;
+    margin-bottom: 8px;
+    input {
+        flex-grow: 1;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+        font-size: 0.9rem;
+    }
+    button { // Uses .btn from components/_buttons.scss
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        padding: 10px 12px; // Adjusted for consistency
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+}
+
+.promo-status-message {
+    display: block;
+    text-align: left;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+    min-height: 1.2em; // Reserve space
+    padding-left: 5px;
+    &.success { color: var(--accent-color); font-weight: 500; }
+    &.error { color: var(--primary-color); font-weight: 500;}
+}
+
+.summary-details {
+    margin-top: 12px;
+}
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    span:first-child {
+        color: #555;
+    }
+    &.discount-row {
+        span:first-child, span:last-child {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+    }
+    &.total-row {
+        margin-top: 8px;
+        span { font-weight: bold; }
+        strong {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+    }
+}
+@media (min-width: 768px) {
+    .summary-row { font-size: 1rem; }
+    .summary-row.total-row strong { font-size: 1.5rem; }
+}
+
+.summary-divider {
+    border: 0;
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 12px 0;
+}
+
+.btn-checkout { // Uses .btn from components
+    width: 100%;
+    margin-top: 15px;
+}
+
+
+// Checkout Form Specifics (already in components/_forms.scss largely)
+.checkout-form {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    h2 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+    }
+    fieldset {
+        border: 1px solid #e0e0e0;
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    legend {
+        font-weight: 600;
+        font-size: 1.05rem;
+        padding: 0 10px;
+        color: var(--text-color);
+        margin-bottom: 8px;
+    }
+}
+@media (min-width: 768px) {
+    .checkout-form { margin-top: 30px; padding: 30px; }
+    .checkout-form h2 { font-size: 1.8rem; margin-bottom: 25px; }
+    .checkout-form fieldset { padding: 20px; margin-bottom: 25px; }
+    .checkout-form legend { font-size: 1.15rem; margin-bottom: 10px; }
+}
+
+.payment-placeholder {
+    font-size: 0.9rem;
+    color: #666;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px dashed #ddd;
+}

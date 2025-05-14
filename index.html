@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cork Grill - Order Online</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Consider adding a favicon link here -->
+    <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav">
+                <a href="index.html" class="active">Menu</a>
+                <a href="#deals-section">Deals</a>
+                <a href="#featured-items">Specials</a> {/* New link */}
+                <a href="my-account.html">My Account</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <a href="cart.html" class="cart-icon-link">
+                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+                <span id="globalCartCount" class="cart-count">0</span>
+            </a>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section container">
+            <h1>Taste the Best Grills in Cork!</h1> {/* Slightly more enticing */}
+            <p>Freshly prepared Kebabs, Burgers & Grills. Order online for quick pickup or delivery.</p>
+            <a href="#menu-categories" class="btn btn-primary hero-cta">Explore Our Menu</a>
+        </section>
+
+        <section id="menu-categories" class="menu-categories-section container">
+            <h2>Browse by Category</h2>
+            <div class="category-grid">
+                <a href="#kebabs" class="category-card">
+                    <div class="category-image-wrapper"><img src="placeholder-category-kebab.jpg" alt="Kebabs"></div>
+                    <h3>Kebabs</h3>
+                </a>
+                <a href="#burgers" class="category-card">
+                    <div class="category-image-wrapper"><img src="placeholder-category-burger.jpg" alt="Burgers"></div>
+                    <h3>Burgers</h3>
+                </a>
+                <a href="#wraps" class="category-card">
+                    <div class="category-image-wrapper"><img src="placeholder-category-wrap.jpg" alt="Wraps"></div>
+                    <h3>Wraps</h3>
+                </a>
+                <a href="#sides" class="category-card">
+                    <div class="category-image-wrapper"><img src="placeholder-category-sides.jpg" alt="Sides"></div>
+                    <h3>Sides</h3>
+                </a>
+                <a href="#drinks" class="category-card">
+                    <div class="category-image-wrapper"><img src="placeholder-category-drinks.jpg" alt="Drinks"></div>
+                    <h3>Drinks</h3>
+                </a>
+                 <a href="#deals-section" class="category-card category-deals">
+                    <div class="category-image-wrapper"><img src="placeholder-category-deals.jpg" alt="Meal Deals"></div>
+                    <h3>Meal Deals</h3>
+                </a>
+            </div>
+        </section>
+
+        {/* NEW Featured Items Section */}
+        <section id="featured-items" class="featured-items-section container">
+            <h2>Today's Specials</h2>
+            <div class="menu-grid">
+                {/* Example Featured Item (would be populated by admin) */}
+                <div class="menu-item-card featured-item" data-item-id="spicy-chicken-burger">
+                    <div class="item-image-container"><img src="placeholder-spicy-burger.jpg" alt="Spicy Chicken Burger"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Spicy Kickin' Chicken Burger</h3>
+                        <p class="item-description">Crispy chicken fillet with our fiery house sauce, jalapeños, and pepper jack cheese.</p>
+                        <p class="item-price">€9.00 <span class="original-price">€10.50</span></p> {/* Example of showing a discount */}
+                    </div>
+                    <a href="item-detail.html?item=spicy-chicken-burger" class="btn btn-primary btn-view-item">Order Now</a>
+                </div>
+                <div class="menu-item-card featured-item" data-item-id="loaded-fries-special">
+                    <div class="item-image-container"><img src="placeholder-loaded-fries.jpg" alt="Loaded Fries Special"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Fully Loaded Fries</h3>
+                        <p class="item-description">Our signature fries topped with cheese sauce, crispy bacon bits, and spring onions.</p>
+                        <p class="item-price">€6.50</p>
+                    </div>
+                    <a href="item-detail.html?item=loaded-fries-special" class="btn btn-primary btn-view-item">Try Them!</a>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="kebabs" class="menu-items-section container">
+            <h2>Kebabs</h2>
+            <div class="menu-grid">
+                <div class="menu-item-card" data-item-id="kebab-deluxe">
+                    <div class="item-image-container"><img src="placeholder-kebab.jpg" alt="Deluxe Kebab"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Deluxe Kebab</h3>
+                        <p class="item-description">Signature kebab with all the trimmings.</p>
+                        <p class="item-price">€9.50</p>
+                    </div>
+                    <a href="item-detail.html?item=kebab-deluxe" class="btn btn-primary btn-view-item">Customize & Add</a>
+                </div>
+                <div class="menu-item-card" data-item-id="chicken-kebab">
+                    <div class="item-image-container"><img src="placeholder-chicken-kebab.jpg" alt="Chicken Kebab"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Chicken Kebab</h3>
+                        <p class="item-description">Marinated grilled chicken pieces.</p>
+                        <p class="item-price">€9.00</p>
+                    </div>
+                    <a href="item-detail.html?item=chicken-kebab" class="btn btn-primary btn-view-item">Customize & Add</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="burgers" class="menu-items-section container">
+            <h2>Burgers</h2>
+            <div class="menu-grid">
+                 <div class="menu-item-card" data-item-id="classic-burger">
+                    <div class="item-image-container"><img src="placeholder-burger.jpg" alt="Classic Burger"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Classic Burger</h3>
+                        <p class="item-description">A juicy beef patty, fresh toppings.</p>
+                        <p class="item-price">€8.00</p>
+                    </div>
+                    <a href="item-detail.html?item=classic-burger" class="btn btn-primary btn-view-item">Customize & Add</a>
+                </div>
+                <div class="menu-item-card" data-item-id="cheese-burger">
+                    <div class="item-image-container"><img src="placeholder-cheese-burger.jpg" alt="Cheese Burger"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Cheese Burger</h3>
+                        <p class="item-description">Classic burger with a slice of cheddar.</p>
+                        <p class="item-price">€8.75</p>
+                    </div>
+                    <a href="item-detail.html?item=cheese-burger" class="btn btn-primary btn-view-item">Customize & Add</a>
+                </div>
+            </div>
+        </section>
+
+        {/* Placeholder for Wraps, Sides, Drinks sections */}
+        <section id="wraps" class="menu-items-section container placeholder-section"><h2>Wraps <span>(Coming Soon)</span></h2></section>
+        <section id="sides" class="menu-items-section container placeholder-section"><h2>Sides & Extras <span>(Coming Soon)</span></h2></section>
+        <section id="drinks" class="menu-items-section container placeholder-section"><h2>Drinks <span>(Coming Soon)</span></h2></section>
+
+
+        <section id="deals-section" class="menu-items-section container deals-highlight-section"> {/* Added class for specific styling */}
+            <h2>Our Best Meal Deals</h2>
+            <div class="menu-grid">
+                 <div class="menu-item-card deal-card" data-item-id="kebab-meal-deal">
+                    <div class="item-image-container"><img src="placeholder-kebab-meal.jpg" alt="Kebab Meal Deal"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Kebab Meal Deal</h3>
+                        <p class="item-description">Your choice of Kebab, regular Fries & a selected Drink. Great value!</p>
+                        <p class="item-price">€12.50</p>
+                    </div>
+                    <a href="item-detail.html?item=kebab-meal-deal" class="btn btn-primary btn-view-item">View Deal Details</a>
+                </div>
+                <div class="menu-item-card deal-card" data-item-id="burger-meal-deal">
+                    <div class="item-image-container"><img src="placeholder-burger-meal.jpg" alt="Burger Meal Deal"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Burger Bonanza Deal</h3>
+                        <p class="item-description">Any Classic Burger, regular Fries & a selected Drink. Save big!</p>
+                        <p class="item-price">€11.00</p>
+                    </div>
+                    <a href="item-detail.html?item=burger-meal-deal" class="btn btn-primary btn-view-item">View Deal Details</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer-bottom">
+        <div class="container footer-content"> {/* Added class for flex layout */}
+            <div class="footer-info">
+                <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
+                <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+            </div>
+            <div class="footer-links">
+                <a href="about.html">About Us</a> |
+                <a href="contact.html">Contact</a> |
+                <a href="#privacy">Privacy Policy (Demo)</a> |
+                <a href="#terms">Terms of Service (Demo)</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+// scss/pages/_account.scss
+
+.my-account-page-body { // Target specific page if needed
+    .page-fade-in > h1 { // Target the main h1 of the page
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 1em;
+    }
+}
+
+.account-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+}
+@media (min-width: 992px) {
+    .account-layout {
+        grid-template-columns: 1fr 1.5fr; // Login/Reg on left, History on right
+    }
+}
+
+.account-section {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    h2 {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 8px;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    p {
+        margin-bottom: 1em;
+        font-size: 0.95rem;
+        color: #555;
+    }
+}
+@media (min-width: 768px) {
+    .account-section { padding: 25px; }
+    .account-section h2 { font-size: 1.6rem; }
+    .account-section p { font-size: 1rem; }
+}
+
+
+.account-form { // Styles from components/_forms.scss will apply generally
+    margin-top: 20px;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    background-color: #fdfdfd;
+
+    h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+        color: var(--text-color);
+    }
+}
+
+.form-switch-text {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+.form-switch-link {
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.order-history-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+    &:last-child {
+        border-bottom: none;
+    }
+    h4 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap; // Allow status to wrap on small screens
+        gap: 10px;
+    }
+    p {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 3px;
+    }
+    small { // For item summary
+        display: block;
+        font-size: 0.8rem;
+        color: #777;
+        margin-top: 5px;
+    }
+}
+
+.order-status {
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+    white-space: nowrap; // Prevent status text from wrapping
+
+    &.pending { background-color: #ffc107; color: var(--text-color); }
+    &.preparing { background-color: #17a2b8; }
+    &.completed { background-color: var(--accent-color); }
+    &.cancelled { background-color: var(--error-color); }
+}
+
+.empty-history-message {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}

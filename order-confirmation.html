@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Cork Grill</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="order-confirmation-page-body"> <!-- Added class for page specific JS -->
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav">
+                <a href="index.html">Menu</a>
+                <a href="index.html#deals-section">Deals</a>
+                <a href="my-account.html">My Account</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <a href="cart.html" class="cart-icon-link">
+                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+                <span id="globalCartCount" class="cart-count">0</span>
+            </a>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </header>
+
+    <main class="container order-confirmation-page">
+        <div class="confirmation-icon success-icon">✔</div>
+        <h1>Thank You! Your Order is Confirmed!</h1>
+        <p>Your Order ID is: <strong id="confirmedOrderId">PROCESSING...</strong>.</p>
+        <p>We've received your order for <strong id="confirmedOrderType">Pickup</strong> and are getting it ready. You'll receive an email confirmation to <strong id="confirmedEmail">your email</strong> shortly (this is a demo).</p>
+        <p>Estimated Time: <strong id="confirmedEstimatedTime">20-30 minutes</strong>.</p>
+
+        <div class="order-summary-preview" id="confirmedOrderSummary">
+            <h3>Your Order Details:</h3>
+            <p id="confirmedOrderName">Name: <span></span></p>
+            <div id="confirmedDeliveryAddress" style="display:none;">
+                 <p>Delivering to: <span id="confirmedOrderAddress"></span></p>
+            </div>
+            <p>Items summary will appear here in a real app.</p>
+            {/* In a real app, you'd pass cart details or fetch them by order ID */}
+        </div>
+
+        <div class="confirmation-actions">
+            <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+            <a href="my-account.html#orders" class="btn btn-secondary">View Order History (Demo)</a>
+        </div>
+    </main>
+
+    <footer class="site-footer-bottom">
+        <div class="container">
+            <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
+            <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

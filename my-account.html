@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Cork Grill</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="my-account-page-body">
+    <header class="site-header">
+         <div class="container">
+            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav">
+                <a href="index.html">Menu</a>
+                <a href="index.html#deals-section">Deals</a>
+                <a href="index.html#featured-items">Specials</a>
+                <a href="my-account.html" class="active">My Account</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <a href="cart.html" class="cart-icon-link">
+                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+                <span id="globalCartCount" class="cart-count">0</span>
+            </a>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </header>
+
+    <main class="container page-fade-in">
+        <h1>My Account</h1>
+
+        <div class="account-layout">
+            <section class="account-section login-register-section">
+                <h2>Login or Create Account</h2>
+                <p>Access your order history, save addresses, and enjoy a faster checkout experience.</p>
+
+                <form id="loginForm" class="account-form" novalidate>
+                    <h3>Login</h3>
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" name="loginEmail" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" name="loginPassword" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <p class="form-switch-text">Don't have an account? <a href="#registerForm" class="form-switch-link">Register here</a>.</p>
+                    <div class="form-status-message" id="loginStatusMessage" aria-live="polite"></div>
+                </form>
+
+                <form id="registerForm" class="account-form" style="display: none;" novalidate>
+                    <h3>Create Account</h3>
+                    <div class="form-group">
+                        <label for="registerName">Full Name:</label>
+                        <input type="text" id="registerName" name="registerName" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" id="registerEmail" name="registerEmail" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password (min. 6 characters):</label>
+                        <input type="password" id="registerPassword" name="registerPassword" required minlength="6">
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirm Password:</label>
+                        <input type="password" id="registerConfirmPassword" name="registerConfirmPassword" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                     <p class="form-switch-text">Already have an account? <a href="#loginForm" class="form-switch-link">Login here</a>.</p>
+                     <div class="form-status-message" id="registerStatusMessage" aria-live="polite"></div>
+                </form>
+            </section>
+
+            <section class="account-section order-history-section">
+                <h2>Your Order History</h2>
+                <div id="orderHistoryList">
+                    {/* Will be populated by JS */}
+                    <p class="empty-history-message" id="emptyHistoryMessage">You have no past orders yet or are not logged in. <a href="index.html">Start shopping!</a></p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer-bottom">
+        <div class="container footer-content">
+            <div class="footer-info">
+                <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
+                <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+            </div>
+            <div class="footer-links">
+                <a href="about.html">About Us</a> |
+                <a href="contact.html">Contact</a> |
+                <a href="#privacy">Privacy Policy (Demo)</a> |
+                <a href="#terms">Terms of Service (Demo)</a>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top">⇧</a>
+
+    <script src="script.js"></script>
+</body>
+</html>

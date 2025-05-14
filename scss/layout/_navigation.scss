@@ -1,0 +1,79 @@
+// scss/layout/_navigation.scss
+
+.main-nav {
+    display: none; // Hidden by default on mobile
+    flex-direction: column;
+    position: absolute;
+    top: calc(100% - 1px); // Position below header, slightly overlapping for no gap
+    left: 0;
+    right: 0;
+    background-color: var(--card-background);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    z-index: 999;
+    max-height: calc(100vh - 60px); // Max height for scrollability
+    overflow-y: auto;
+
+    &.mobile-active { // .main-nav.mobile-active
+        display: flex;
+    }
+
+    a {
+        margin: 0;
+        padding: 12px var(--mobile-padding);
+        color: var(--text-color);
+        font-weight: 500;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s ease, color 0.3s ease;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover,
+        &.active { // .main-nav a:hover, .main-nav a.active
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            border-bottom-color: #f0f0f0; // Match hover background or remove for mobile
+        }
+    }
+}
+
+@media (min-width: 850px) { // Desktop navigation
+    .main-nav {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        box-shadow: none;
+        padding: 0;
+        border-top: none;
+        max-height: none;
+        overflow-y: visible;
+
+        a {
+            margin-left: 25px;
+            padding: 8px 0;
+            border-bottom: 3px solid transparent; // Reinstate desktop underline
+
+            &:hover,
+            &.active {
+                background-color: transparent; // No background hover on desktop
+                border-bottom-color: var(--primary-color);
+            }
+        }
+    }
+    .mobile-nav-toggle {
+        display: none;
+    }
+}
+
+.mobile-nav-toggle {
+    display: block; // Show by default, hide on desktop via media query above
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--text-color);
+    padding: 8px;
+}

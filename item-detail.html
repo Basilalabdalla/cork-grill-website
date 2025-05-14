@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Order - Cork Grill</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="item-customization-page">
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav">
+                <a href="index.html">Menu</a>
+                <a href="index.html#deals-section">Deals</a>
+                <a href="my-account.html">My Account</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <a href="cart.html" class="cart-icon-link">
+                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+                <span id="globalCartCount" class="cart-count">0</span>
+            </a>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </header>
+
+    <main class="container item-customization-page-content">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="index.html">Menu</a></li>
+                <li><a href="index.html#kebabs" id="breadcrumbCategory">Kebabs</a></li>
+                <li aria-current="page" id="breadcrumbItemName">Deluxe Kebab</li>
+            </ol>
+        </nav>
+
+        <div class="item-detail-layout">
+            <div class="item-detail-image-column">
+                <img src="placeholder-kebab.jpg" alt="Deluxe Kebab" id="itemDetailImage">
+            </div>
+            <div class="item-detail-options-column">
+                <h1 id="itemDetailName">Deluxe Kebab</h1>
+                <p id="itemDetailDescription" class="item-base-description">Our signature kebab with all the trimmings, fresh salad, and your choice of sauce.</p>
+                <p class="item-base-price">Base Price: <span id="itemBasePrice">€9.50</span></p>
+
+                <form id="customizationForm">
+                    <section class="customization-section">
+                        <h3>Choose Your Ingredients:</h3>
+                        <div class="option-group choice-group">
+                            <label class="choice-label"><input type="checkbox" name="lettuce" data-price-change="0" checked> <span>Lettuce</span></label>
+                            <label class="choice-label"><input type="checkbox" name="tomato" data-price-change="0" checked> <span>Tomato</span></label>
+                            <label class="choice-label"><input type="checkbox" name="onion" data-price-change="0"> <span>Onion</span></label>
+                            <label class="choice-label"><input type="checkbox" name="extra_cheese" data-price-change="1.00"> <span>Extra Cheese (+€1.00)</span></label>
+                            <label class="choice-label"><input type="checkbox" name="pickles" data-price-change="-0.50"> <span>No Pickles (-€0.50)</span></label>
+                        </div>
+                    </section>
+
+                    <section class="customization-section">
+                        <h3>Select Your Sauce:</h3>
+                        <div class="option-group radio-group choice-group">
+                            <label class="choice-label"><input type="radio" name="sauce" value="garlic" checked> <span>Garlic Sauce</span></label>
+                            <label class="choice-label"><input type="radio" name="sauce" value="chili"> <span>Chili Sauce</span></label>
+                            <label class="choice-label"><input type="radio" name="sauce" value="house_special"> <span>House Special</span></label>
+                        </div>
+                    </section>
+
+                    <section class="customization-section meal-option">
+                        <label class="make-meal-label choice-label">
+                            <input type="checkbox" id="makeItMeal" data-price-change="3.50">
+                            <span>Make it a Meal? (Fries & Drink +€3.50)</span>
+                        </label>
+                    </section>
+
+                    <div class="order-actions">
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn minus-btn" data-action="decrease" aria-label="Decrease quantity">-</button>
+                            <input type="number" class="quantity-value" value="1" min="1" name="quantity" aria-label="Quantity">
+                            <button type="button" class="quantity-btn plus-btn" data-action="increase" aria-label="Increase quantity">+</button>
+                        </div>
+                        <div class="final-price-display">
+                            Total: <span id="finalItemPrice" class="price-value">€9.50</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-add-to-cart-submit">Add to My Order</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Message Container -->
+    <div id="toastContainer">
+        <div id="addToCartMessage" class="add-to-cart-message">Item Added!</div>
+    </div>
+
+
+    <footer class="site-footer-bottom">
+        <div class="container">
+            <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
+            <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

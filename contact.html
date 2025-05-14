@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Cork Grill</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="contact-page-body">
+    <header class="site-header">
+         <div class="container">
+            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav">
+                <a href="index.html">Menu</a>
+                <a href="index.html#deals-section">Deals</a>
+                <a href="index.html#featured-items">Specials</a>
+                <a href="my-account.html">My Account</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html" class="active">Contact</a>
+            </nav>
+            <a href="cart.html" class="cart-icon-link">
+                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+                <span id="globalCartCount" class="cart-count">0</span>
+            </a>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </header>
+
+    <main class="container page-fade-in">
+        <section class="page-hero">
+            {/* Placeholder for a map or contact-related image */}
+            <div class="map-placeholder">
+                {/* Replace with actual embedded map later */}
+                <p>(Embedded Google Map Will Go Here)</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2461.8587890199003!2d-8.469711923832196!3d51.90246997190458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x484490093398a96b%3A0x8f1f80869481fd1b!2s20%20Coburg%20St%2C%20Victorian%20Quarter%2C%20Cork%2C%20T23%20DX52!5e0!3m2!1sen!2sie!4v1700000000000!5m2!1sen!2sie" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+
+        <div class="contact-layout">
+            <section class="contact-details-section content-section">
+                <h2>Get In Touch</h2>
+                <p>We'd love to hear from you! Whether it's a question about our menu, a booking inquiry (if applicable), or feedback, feel free to reach out.</p>
+                <ul>
+                    <li><strong>Address:</strong> 20 Coburg St, Victorian Quarter, Cork, T23 DX52</li>
+                    <li><strong>Phone:</strong> <a href="tel:+353021XXXXXXX">+353 (021) XXX XXXX</a> (Replace with actual number)</li>
+                    <li><strong>Email:</strong> <a href="mailto:info@corkgrill.ie">info@corkgrill.ie</a> (Replace/Confirm)</li>
+                </ul>
+                <h3>Opening Hours:</h3>
+                <ul>
+                    <li>Monday - Wednesday: 12:00 PM - 11:00 PM</li>
+                    <li>Thursday: 12:00 PM - 12:00 AM</li>
+                    <li>Friday - Saturday: 12:00 PM - 1:00 AM</li>
+                    <li>Sunday: 1:00 PM - 11:00 PM</li>
+                    <li>(Please verify these hours)</li>
+                </ul>
+            </section>
+
+            <section class="contact-form-section content-section">
+                <h2>Send Us a Message</h2>
+                <form id="contactForm" class="general-form">
+                    <div class="form-group">
+                        <label for="contactName">Your Name:</label>
+                        <input type="text" id="contactName" name="contactName" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Your Email:</label>
+                        <input type="email" id="contactEmail" name="contactEmail" required>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Subject:</label>
+                        <input type="text" id="contactSubject" name="contactSubject">
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message:</label>
+                        <textarea id="contactMessage" name="contactMessage" rows="5" required></textarea>
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <div id="contactFormStatus" class="form-status-message" aria-live="polite"></div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer-bottom">
+        <div class="container footer-content">
+            <div class="footer-info">
+                <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
+                <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+            </div>
+            <div class="footer-links">
+                <a href="about.html">About Us</a> |
+                <a href="contact.html">Contact</a> |
+                <a href="#privacy">Privacy Policy (Demo)</a> |
+                <a href="#terms">Terms of Service (Demo)</a>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top">⇧</a>
+
+    <script src="script.js"></script>
+</body>
+</html>

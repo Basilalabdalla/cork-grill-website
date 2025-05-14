@@ -1,0 +1,33 @@
+// scss/style.scss
+
+// 1. Variables (CSS Custom Properties)
+@import 'base/variables';
+
+// 2. Base & Reset
+@import 'base/reset';
+@import 'base/global'; // Includes body, container, basic typography, page fade
+
+// 3. Layout
+@import 'layout/header';
+@import 'layout/navigation';
+@import 'layout/footer';
+// @import 'layout/grid'; // If you had a generic grid system
+
+// 4. Components
+@import 'components/buttons';
+@import 'components/cards';
+@import 'components/forms';
+@import 'components/toast';
+@import 'components/scroll-to-top';
+// @import 'components/modal'; // If we had a modal for item detail
+
+// 5. Page-Specific Styles
+@import 'pages/home';
+@import 'pages/item-detail';
+@import 'pages/cart';
+@import 'pages/account';
+@import 'pages/about-contact';
+@import 'pages/order-confirmation';
+
+// 6. Utilities (Optional - if you create utility classes like .u-text-center)
+// @import 'utilities';
