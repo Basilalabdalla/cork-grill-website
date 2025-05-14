@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Cork Grill - Our Story</title>
-    <link rel="stylesheet" href="style.css">
+    <title>About Cork Grill - Our Story & Commitment to Quality</title>
+
+    <meta name="description" content="Learn more about Cork Grill, our passion for fresh grilled food, quality ingredients, and our commitment to serving the Cork community from the Victorian Quarter.">
+    <meta name="keywords" content="about cork grill, cork restaurant story, victorian quarter dining, fresh ingredients cork">
+
+    {/* Open Graph / Facebook Meta Tags */}
+    <meta property="og:title" content="About Cork Grill - Passionate About Food">
+    <meta property="og:description" content="Discover the story behind Cork Grill and our dedication to serving delicious, high-quality grilled meals.">
+    <meta property="og:image" content="https://www.your-cork-grill-domain.com/images/social-preview-corkgrill.jpg"> {/* TODO: Replace */}
+    <meta property="og:type" content="website">
+
+    <link rel="stylesheet" href="css/style.css">
+    {/* Favicon Links */}
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="images/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body class="about-page-body">
     <header class="site-header">
         <div class="container">
-            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
-            <nav class="main-nav">
+            <a href="index.html" class="logo-link" aria-label="Cork Grill Homepage"><img src="images/placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav" aria-label="Main navigation" id="mainNavMenu">
                 <a href="index.html">Menu</a>
                 <a href="index.html#deals-section">Deals</a>
                 <a href="index.html#featured-items">Specials</a>
@@ -18,45 +36,46 @@
                 <a href="about.html" class="active">About Us</a>
                 <a href="contact.html">Contact</a>
             </nav>
-            <a href="cart.html" class="cart-icon-link">
-                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+            <a href="cart.html" class="cart-icon-link" aria-label="View your shopping cart">
+                <img src="images/placeholder-cart-icon.svg" alt="" class="cart-icon-img">
                 <span id="globalCartCount" class="cart-count">0</span>
+                <span class="visually-hidden">items in cart</span>
             </a>
-            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mainNavMenu">☰</button>
         </div>
     </header>
 
     <main class="container page-fade-in">
         <section class="page-hero">
-            <img src="placeholder-about-hero.jpg" alt="Cork Grill Restaurant Interior" class="page-hero-image">
+            <img src="images/placeholder-about-hero.jpg" alt="Warm ambiance of Cork Grill restaurant" class="page-hero-image">
             <div class="page-hero-overlay">
                 <h1>Our Story</h1>
             </div>
         </section>
 
-        <section class="content-section">
-            <h2>Welcome to Cork Grill</h2>
-            <p>Located in the vibrant Victorian Quarter of Cork, Cork Grill has been serving up delicious, freshly prepared grilled food since [Year Established - e.g., 2015]. Our passion is simple: great food, made with quality ingredients, served with a smile.</p>
-            <p>From our signature kebabs, crafted with traditional recipes and the freshest accompaniments, to our juicy, handcrafted burgers and flavourful wraps, we aim to satisfy every craving. We believe in generous portions and providing excellent value for our customers.</p>
+        <section class="content-section" aria-labelledby="welcome-heading">
+            <h2 id="welcome-heading">Welcome to Cork Grill</h2>
+            <p>Located in the vibrant Victorian Quarter of Cork, Cork Grill has been serving up delicious, freshly prepared grilled food since <strong>[Year Established - e.g., 2015]</strong>. Our passion is simple: great food, made with quality ingredients, served with a smile.</p>
+            <p>From our signature kebabs, crafted with traditional recipes and the freshest accompaniments, to our juicy, handcrafted burgers and flavourful wraps, we aim to satisfy every craving. We believe in generous portions and providing excellent value for our customers. Whether you're grabbing a quick lunch, ordering dinner for the family, or seeking a satisfying late-night meal, Cork Grill is your go-to spot in Cork.</p>
         </section>
 
         <section class="content-section mission-vision-section">
             <div class="mission-vision-grid">
-                <div class="mission-card">
-                    <h3>Our Mission</h3>
-                    <p>To be Cork's favourite destination for high-quality, delicious grilled food, offering a welcoming atmosphere and exceptional customer service for both dine-in and takeaway experiences.</p>
-                </div>
-                <div class="vision-card">
-                    <h3>Our Commitment</h3>
-                    <p>We are committed to using fresh, locally sourced ingredients where possible, maintaining high standards of hygiene, and continuously innovating our menu to bring exciting flavours to our community.</p>
-                </div>
+                <article class="mission-card" aria-labelledby="mission-heading">
+                    <h3 id="mission-heading">Our Mission</h3>
+                    <p>To be Cork's favourite destination for high-quality, delicious grilled food, offering a welcoming atmosphere and exceptional customer service for both dine-in and takeaway experiences. We strive to create memorable meals that bring people together.</p>
+                </article>
+                <article class="vision-card" aria-labelledby="commitment-heading">
+                    <h3 id="commitment-heading">Our Commitment</h3>
+                    <p>We are committed to using fresh, locally sourced ingredients where possible, maintaining the highest standards of hygiene, and continuously innovating our menu to bring exciting and authentic flavours to our cherished community.</p>
+                </article>
             </div>
         </section>
 
-        <section class="content-section team-section">
-            <h2>Meet the Team (Concept)</h2>
-            <p>Behind every great meal is a dedicated team. While we can't introduce everyone, know that our chefs and staff are passionate about food and dedicated to making your Cork Grill experience a memorable one.</p>
-            {/* Placeholder for team images or more text */}
+        <section class="content-section team-section" aria-labelledby="team-heading">
+            <h2 id="team-heading">Meet the Team (Concept)</h2>
+            <p>Behind every great meal at Cork Grill is a dedicated and passionate team. While we can't introduce everyone individually here, know that our chefs bring years of experience and a love for grilling, our counter staff are always ready with a friendly welcome, and everyone involved is committed to making your Cork Grill experience a memorable one. We're a local business proud to be part of the Cork community.</p>
+            {/* Placeholder for team images or more text if available */}
         </section>
     </main>
 
@@ -66,17 +85,17 @@
                 <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
                 <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
             </div>
-            <div class="footer-links">
+            <nav class="footer-links" aria-label="Footer navigation">
                 <a href="about.html">About Us</a> |
                 <a href="contact.html">Contact</a> |
                 <a href="#privacy">Privacy Policy (Demo)</a> |
                 <a href="#terms">Terms of Service (Demo)</a>
-            </div>
+            </nav>
         </div>
     </footer>
 
-    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top">⇧</a>
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top" aria-label="Scroll back to top of page">⇧</a>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
