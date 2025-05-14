@@ -31,6 +31,24 @@ a:hover {
     color: var(--primary-color);
 }
 
+/* General focus style for accessibility */
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(255, 103, 0, 0.25); /* Optional: for a softer glow */
+}
+/* Remove default outline if custom is applied, but ensure custom is visible */
+*:focus:not(:focus-visible) { /* For mouse users, don't always show if browser supports :focus-visible */
+    outline: none;
+    box-shadow: none;
+}
+*:focus-visible { /* For keyboard users, always show */
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(255, 103, 0, 0.25);
+}
+
+
 h1, h2, h3, h4 {
     margin-bottom: 0.75em;
     color: var(--text-color);
@@ -73,8 +91,8 @@ h3 { font-size: 1.3rem; }
 }
 
 
-/* Placeholder Images - Keep this global for now */
-[src^="images/placeholder-"] { /* Adjusted path if placeholders are in images/ */
+/* Placeholder Images - Global Fallback */
+[src^="images/placeholder-"] { // Assuming placeholders are in images/ folder
     background-color: #e0e0e0;
     display: flex;
     align-items: center;
@@ -82,14 +100,17 @@ h3 { font-size: 1.3rem; }
     color: #aaa;
     font-size: 0.8rem;
     text-align: center;
+    border: 1px dashed #ccc; // So we can see the box
 }
+
+// Specific placeholder sizes (if needed, otherwise the above rule applies)
 .logo[src^="images/placeholder-"] { min-height: 40px; width: 120px; font-size: 0.9rem; }
 @media (min-width: 768px) { .logo[src^="images/placeholder-"] {min-height: 45px; width: 130px; font-size: 1rem;} }
 
 .item-image-container [src^="images/placeholder-"] { min-height: 180px; }
 @media (min-width: 768px) { .item-image-container [src^="images/placeholder-"] {min-height: 200px;} }
 
-.cart-icon img[src^="images/placeholder-"] { width: 26px; height: 26px; border: 1px solid #ccc; border-radius: 4px; }
+.cart-icon img[src^="images/placeholder-"] { width: 26px; height: 26px; border-radius: 4px; }
 @media (min-width: 768px) { .cart-icon img[src^="images/placeholder-"] {width: 28px; height: 28px;} }
 
 .category-card .category-image-wrapper [src^="images/placeholder-"] { height: 100%; width: 100%; object-fit: contain; }
@@ -97,4 +118,4 @@ h3 { font-size: 1.3rem; }
 .cart-item-image[src^="images/placeholder-"] { min-height: 70px; min-width: 70px; }
 @media (min-width: 768px) { .cart-item-image[src^="images/placeholder-"] {min-height: 80px; min-width: 80px;} }
 
-.page-hero-image[src^="images/placeholder-"] { min-height: 200px; background-color: #555; color: #fff; font-size: 1rem;}
+.page-hero-image[src^="images/placeholder-"] { min-height: 200px; background-color: #555; /* Darker for hero if image missing */}

@@ -3,22 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {/* Title will be updated by JS */}
     <title>Customize Your Order - Cork Grill</title>
-
     <meta name="description" content="Customize your kebab, burger, or meal at Cork Grill. Choose your ingredients, sauces, and make it a meal for the perfect takeaway or delivery.">
-    {/* Keywords could be dynamic or general */}
     <meta name="keywords" content="cork grill, customize food, online order, kebab customization, burger customization">
-
-    {/* Open Graph / Facebook Meta Tags - These should ideally be dynamic based on item */}
     <meta property="og:title" content="Customize Your Order - Cork Grill">
     <meta property="og:description" content="Personalize your meal from Cork Grill with fresh ingredients and delicious sauces.">
-    <meta property="og:image" content="https://www.your-cork-grill-domain.com/images/social-preview-corkgrill.jpg"> {/* TODO: Replace, or make dynamic */}
+    <meta property="og:image" content="images/social-preview-corkgrill.jpg">
     <meta property="og:type" content="website">
-    {/* og:url would be the specific item page URL */}
-
     <link rel="stylesheet" href="css/style.css">
-    {/* Favicon Links */}
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
@@ -94,7 +86,7 @@
                             <input type="number" class="quantity-value" value="1" min="1" name="quantity" aria-label="Quantity">
                             <button type="button" class="quantity-btn plus-btn" data-action="increase" aria-label="Increase quantity">+</button>
                         </div>
-                        <div class="final-price-display" aria-live="polite"> {/* Announce price changes */}
+                        <div class="final-price-display" aria-live="polite">
                             Total: <span id="finalItemPrice" class="price-value">€9.50</span>
                         </div>
                     </div>

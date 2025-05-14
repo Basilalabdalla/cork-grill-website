@@ -1,7 +1,9 @@
 // scss/components/_buttons.scss
 
 .btn {
-    display: inline-block;
+    display: inline-flex; // For aligning text and spinner
+    align-items: center;
+    justify-content: center;
     padding: 10px 20px;
     border-radius: var(--border-radius);
     font-size: 0.95rem;
@@ -10,7 +12,7 @@
     transition: background-color 0.3s ease, transform 0.15s ease, box-shadow 0.2s ease;
     border: none;
     font-weight: 600;
-    -webkit-appearance: none; // Remove iOS default styling
+    -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
 
@@ -46,7 +48,40 @@
     }
 }
 
-// Specific button instances might go in page-specific SCSS if they don't need to be generic
+.btn { // General button, can apply to specific instances if they don't have overrides
+    .loading-spinner {
+        width: 1em; // Relative to button font size
+        height: 1em;
+        border: 2px solid rgba(255, 255, 255, 0.3); // Spinner color based on button text color
+        border-top-color: currentColor; // Make top part of spinner match button text color
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-left: 8px;
+        display: none; /* Hidden by default */
+    }
+
+    &.loading { // When .loading class is added
+        .btn-text {
+            display: none; // Hide text
+        }
+        .loading-spinner {
+            display: inline-block !important; // Show spinner
+            margin-left: 0; // Center spinner when text is hidden
+        }
+    }
+}
+// Make spinner color adapt for secondary buttons too if needed
+.btn-secondary.loading .loading-spinner {
+    border-top-color: white; /* Assuming secondary button text is white */
+}
+
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+// Specific button instances (some might be better in page-specific SCSS if not reusable)
 .btn-checkout,
 .btn-place-order,
 .btn-add-to-cart-submit {
@@ -78,7 +113,7 @@
     }
 }
 
-.btn-sm { // For view details in order history
-    padding: 6px 12px !important; // Use !important if needed to override .btn
+.btn-sm {
+    padding: 6px 12px !important;
     font-size: 0.85rem !important;
 }

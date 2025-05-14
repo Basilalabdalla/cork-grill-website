@@ -5,12 +5,13 @@
 
 // 2. Base & Reset
 @forward 'base/reset';
-@forward 'base/global'; // Includes .visually-hidden now
+@forward 'base/global';
 
 // 3. Layout
 @forward 'layout/header';
 @forward 'layout/navigation';
 @forward 'layout/footer';
+// @forward 'layout/grid'; // If you had a generic grid system
 
 // 4. Components
 @forward 'components/buttons';
@@ -18,6 +19,7 @@
 @forward 'components/forms';
 @forward 'components/toast';
 @forward 'components/scroll-to-top';
+// @forward 'components/modal'; // We added order details modal styles directly in pages/account.scss, can be componentized later
 
 // 5. Page-Specific Styles
 @forward 'pages/home';
@@ -26,3 +28,6 @@
 @forward 'pages/account';
 @forward 'pages/about-contact';
 @forward 'pages/order-confirmation';
+
+// 6. Utilities (Optional)
+// @forward 'utilities';
