@@ -14,6 +14,7 @@ Thumbs.db
 
 # SASS cache
 .sass-cache/
+_MACOSX/
 
 # Optional: Compiled CSS map if you don't want to track it
 # If you want to commit it, remove the line below or comment it out.

@@ -1,94 +1,20 @@
-<<<<<<< HEAD
-                        <!-- ... (rest of cart.html above this) ... -->
-                        <section id="checkoutFormSection" class="checkout-form" style="display:none;" aria-labelledby="checkout-heading">
-                            <h2 id="checkout-heading">Checkout Details</h2>
-                            <form id="checkoutForm" novalidate>
-                                <fieldset>
-                                    <legend>Your Information</legend>
-                                    <div class="form-group">
-                                        <label for="checkoutName">Full Name:</label>
-                                        <input type="text" id="checkoutName" name="checkoutName" required autocomplete="name">
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="checkoutEmail">Email:</label>
-                                        <input type="email" id="checkoutEmail" name="checkoutEmail" required autocomplete="email">
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="checkoutPhone">Phone Number:</label>
-                                        <input type="tel" id="checkoutPhone" name="checkoutPhone" required pattern="[0-9\s\-()+]{7,}" autocomplete="tel">
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                </fieldset>
-                
-                                <fieldset>
-                                    <legend>Order Type</legend>
-                                    <div class="form-group form-group-radio">
-                                        {/* Ensure these have unique IDs if you want to save/load their state, though name attribute handles selection */}
-                                        <label><input type="radio" id="orderTypePickup" name="orderType" value="pickup" checked> Pickup</label>
-                                        <label><input type="radio" id="orderTypeDelivery" name="orderType" value="delivery"> Delivery</label>
-                                    </div>
-                                </fieldset>
-                
-                                <fieldset id="deliveryAddressFields" class="delivery-fields" style="display:none;">
-                                    <legend>Delivery Address</legend>
-                                    <div class="form-group">
-                                        <label for="checkoutAddress1">Address Line 1:</label>
-                                        <input type="text" id="checkoutAddress1" name="checkoutAddress1" autocomplete="street-address">
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="checkoutAddress2">Address Line 2 (Optional):</label>
-                                        <input type="text" id="checkoutAddress2" name="checkoutAddress2" autocomplete="address-line2">
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="checkoutEircode">Eircode:</label>
-                                        <input type="text" id="checkoutEircode" name="checkoutEircode" autocomplete="postal-code">
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="deliveryInstructions">Delivery Instructions (Optional):</label>
-                                        <textarea id="deliveryInstructions" name="deliveryInstructions" rows="3"></textarea>
-                                        <span class="error-message" aria-live="polite"></span>
-                                    </div>
-                                </fieldset>
-                
-                                <fieldset>
-                                    <legend>Payment</legend>
-                                    <p class="payment-placeholder">Payment processing will be handled securely. (Online payment options coming soon!)</p>
-                                    <div class="form-group">
-                                         <label><input type="radio" id="paymentCash" name="paymentMethod" value="cash_on_pickup" checked> Pay on Pickup/Delivery (Cash/Card)</label>
-                                    </div>
-                                </fieldset>
-                
-                                <button type="submit" class="btn btn-primary btn-place-order" id="placeOrderBtn">
-                                    <span class="btn-text">Place My Order</span>
-                                    <span class="loading-spinner" style="display: none;"></span>
-                                </button>
-                            </form>
-                        </section>
-                                        <!-- ... (rest of cart.html below this) ... -->
-=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Shopping Cart - Cork Grill</title>
-
     <meta name="description" content="Review your order from Cork Grill. Modify quantities, apply promo codes, and proceed to checkout for your delicious kebabs, burgers, and grills.">
     <meta name="keywords" content="cork grill, shopping cart, order summary, checkout, food order">
-
-    {/* Open Graph / Facebook Meta Tags */}
+    <!-- Open Graph / Facebook Meta Tags -->
     <meta property="og:title" content="Your Cork Grill Shopping Cart">
     <meta property="og:description" content="Finalize your order for fresh and tasty grilled food from Cork Grill.">
-    <meta property="og:image" content="https://www.your-cork-grill-domain.com/images/social-preview-corkgrill.jpg"> {/* TODO: Replace */}
+    <meta property="og:image" content="images/social-preview-corkgrill.jpg"> <!-- TODO: Create this image -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.your-cork-grill-domain.com/cart.html"> <!-- TODO: Replace with actual live URL -->
 
     <link rel="stylesheet" href="css/style.css">
-    {/* Favicon Links */}
+    <!-- Favicon Links -->
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
@@ -124,16 +50,19 @@
         <div class="cart-layout">
             <section id="cartItemsList" class="cart-items-column" aria-labelledby="cart-items-heading">
                 <h2 id="cart-items-heading" class="visually-hidden">Items in your cart</h2>
-                {/* Cart items will be dynamically inserted here */}
+                <!-- Cart items will be dynamically inserted here by JavaScript -->
             </section>
 
             <aside class="cart-summary-column" aria-labelledby="cart-summary-heading">
-                <div class="cart-summary" id="cartSummarySection">
+                <div class="cart-summary" id="cartSummarySection" style="display:none;"> {/* Initially hidden, shown by JS if cart has items */}
                     <h2 id="cart-summary-heading">Order Summary</h2>
                     <div class="promo-code-section">
                         <label for="cartPromoCode" class="visually-hidden">Promo Code</label>
                         <input type="text" id="cartPromoCode" placeholder="Enter Promo Code">
-                        <button class="btn btn-secondary btn-apply-promo" id="applyPromoBtn">Apply</button>
+                        <button class="btn btn-secondary btn-apply-promo" id="applyPromoBtn">
+                             <span class="btn-text">Apply</span>
+                             <span class="loading-spinner" style="display: none;"></span>
+                        </button>
                     </div>
                     <small id="promoStatusMessage" class="promo-status-message" aria-live="polite"></small>
 
@@ -161,7 +90,7 @@
             <p>Your cart is currently empty.</p>
             <a href="index.html" class="btn btn-primary">Continue Shopping</a>
         </div>
-/
+
         <section id="checkoutFormSection" class="checkout-form" style="display:none;" aria-labelledby="checkout-heading">
             <h2 id="checkout-heading">Checkout Details</h2>
             <form id="checkoutForm" novalidate>
@@ -187,8 +116,8 @@
                 <fieldset>
                     <legend>Order Type</legend>
                     <div class="form-group form-group-radio">
-                        <label><input type="radio" name="orderType" value="pickup" checked> Pickup</label>
-                        <label><input type="radio" name="orderType" value="delivery"> Delivery</label>
+                        <label><input type="radio" id="orderTypePickup" name="orderType" value="pickup" checked> Pickup</label>
+                        <label><input type="radio" id="orderTypeDelivery" name="orderType" value="delivery"> Delivery</label>
                     </div>
                 </fieldset>
 
@@ -220,11 +149,14 @@
                     <legend>Payment</legend>
                     <p class="payment-placeholder">Payment processing will be handled securely. (Online payment options coming soon!)</p>
                     <div class="form-group">
-                         <label><input type="radio" name="paymentMethod" value="cash_on_pickup" checked> Pay on Pickup/Delivery (Cash/Card)</label>
+                         <label><input type="radio" id="paymentCash" name="paymentMethod" value="cash_on_pickup" checked> Pay on Pickup/Delivery (Cash/Card)</label>
                     </div>
                 </fieldset>
 
-                <button type="submit" class="btn btn-primary btn-place-order">Place My Order</button>
+                <button type="submit" class="btn btn-primary btn-place-order" id="placeOrderBtn">
+                    <span class="btn-text">Place My Order</span>
+                    <span class="loading-spinner" style="display: none;"></span>
+                </button>
             </form>
         </section>
     </main>
@@ -249,4 +181,3 @@
     <script src="js/script.js"></script>
 </body>
 </html>
->>>>>>> 64f775a31c8819cb25a0a9ece7afee38b0d6655f
