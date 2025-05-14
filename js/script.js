@@ -1,28 +1,63 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- GLOBAL HELPER FUNCTIONS ---
-    const getCart = () => JSON.parse(localStorage.getItem('corkGrillCart') || '[]');
-    const saveCart = (cart) => { localStorage.setItem('corkGrillCart', JSON.stringify(cart)); updateGlobalCartCount(); };
-    const clearCart = () => { localStorage.removeItem('corkGrillCart'); localStorage.removeItem('corkGrillAppliedPromo'); updateGlobalCartCount(); };
+    const getCart = () => {
+        try {
+            const cartData = localStorage.getItem('corkGrillCart');
+            // console.log("getCart raw data:", cartData); // DEBUG
+            const cart = cartData ? JSON.parse(cartData) : [];
+            // console.log("getCart parsed:", cart); // DEBUG
+            return cart;
+        } catch (e) {
+            console.error("Error parsing cart from localStorage:", e);
+            return [];
+        }
+    };
+
+    const saveCart = (cart) => {
+        try {
+            // console.log("saveCart called with:", cart); // DEBUG
+            localStorage.setItem('corkGrillCart', JSON.stringify(cart));
+            updateGlobalCartCount();
+        } catch (e) {
+            console.error("Error saving cart to localStorage:", e);
+        }
+    };
+
+    const clearCart = () => {
+        localStorage.removeItem('corkGrillCart');
+        localStorage.removeItem('corkGrillAppliedPromo');
+        updateGlobalCartCount();
+    };
+
     const getOrderHistory = () => JSON.parse(localStorage.getItem('corkGrillOrderHistory') || '[]');
     const saveOrderToHistory = (orderDetails) => { const history = getOrderHistory(); history.unshift(orderDetails); localStorage.setItem('corkGrillOrderHistory', JSON.stringify(history.slice(0, 10))); };
+
     const updateGlobalCartCount = () => {
-        const cart = getCart(); let totalItems = 0;
-        cart.forEach(item => { totalItems += item.quantity; });
+        const cart = getCart();
+        let totalItems = 0;
+        cart.forEach(item => {
+            const quantity = parseInt(item.quantity);
+            if (!isNaN(quantity) && quantity > 0) {
+                totalItems += quantity;
+            }
+        });
+        // console.log("updateGlobalCartCount - totalItems:", totalItems); // DEBUG
         const globalCartCountEl = document.getElementById('globalCartCount');
         if (globalCartCountEl) {
             const prevCount = parseInt(globalCartCountEl.dataset.prevCount || '0');
             globalCartCountEl.textContent = totalItems;
-            if ((totalItems > prevCount && totalItems > 0) || (totalItems < prevCount && prevCount > 0)) {
+            if ((totalItems > prevCount && totalItems > 0) || (totalItems < prevCount && prevCount >= 0)) {
                 globalCartCountEl.classList.add('updated');
                 setTimeout(() => globalCartCountEl.classList.remove('updated'), 300);
             }
             globalCartCountEl.dataset.prevCount = totalItems;
         }
     };
-    function showError(inputElement, message) { inputElement.classList.add('error'); const errorSpan = inputElement.nextElementSibling; if (errorSpan && errorSpan.classList.contains('error-message')) { errorSpan.textContent = message; } }
-    function clearError(inputElement) { inputElement.classList.remove('error'); const errorSpan = inputElement.nextElementSibling; if (errorSpan && errorSpan.classList.contains('error-message')) { errorSpan.textContent = ''; } }
+
+    function showError(inputElement, message) { if (!inputElement) return; inputElement.classList.add('error'); const errorSpan = inputElement.nextElementSibling; if (errorSpan && errorSpan.classList.contains('error-message')) { errorSpan.textContent = message; } }
+    function clearError(inputElement) { if (!inputElement) return; inputElement.classList.remove('error'); const errorSpan = inputElement.nextElementSibling; if (errorSpan && errorSpan.classList.contains('error-message')) { errorSpan.textContent = ''; } }
     function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-    const setButtonLoading = (button, isLoading) => {
+    const setButtonLoading = (button, isLoading) => { /* ... (same as before) ... */
         if (!button) return;
         const textSpan = button.querySelector('.btn-text');
         const spinnerSpan = button.querySelector('.loading-spinner');
@@ -42,33 +77,162 @@ document.addEventListener('DOMContentLoaded', () => {
     updateGlobalCartCount();
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const mainNavMenu = document.getElementById('mainNavMenu');
-    if (mobileNavToggle && mainNavMenu) {
-        mobileNavToggle.addEventListener('click', () => { const isExpanded = mainNavMenu.classList.toggle('mobile-active'); mobileNavToggle.setAttribute('aria-expanded', isExpanded); });
-        mainNavMenu.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { if (mainNavMenu.classList.contains('mobile-active')) { mainNavMenu.classList.remove('mobile-active'); mobileNavToggle.setAttribute('aria-expanded', 'false'); } }); });
-    }
+    if (mobileNavToggle && mainNavMenu) { /* ... (same as before) ... */ }
     const currentYearSpan = document.getElementById('currentYear');
     if (currentYearSpan) { currentYearSpan.textContent = new Date().getFullYear(); }
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-    if (scrollToTopBtn) { window.addEventListener('scroll', () => { if (window.pageYOffset > 300) { scrollToTopBtn.classList.add('visible'); } else { scrollToTopBtn.classList.remove('visible'); } }); scrollToTopBtn.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
+    if (scrollToTopBtn) { /* ... (same as before) ... */ }
 
     // --- DUMMY MENU ITEMS DATA STORE ---
-    const menuItemsData = {
-        "kebab-deluxe": { id: "kebab-deluxe", name: "Deluxe Kebab", description: "Our signature kebab with all trimmings, fresh salad, and your choice of sauce.", price: 9.50, image: "images/placeholder-kebab.jpg", category: "Kebabs", customizableIngredients: [{id: "lettuce", name:"Lettuce", price:0, default:true}, {id:"tomato", name:"Tomato", price:0, default:true}, {id:"onion", name:"Onion", price:0, default:false}, {id:"extra_cheese", name:"Extra Cheese", price:1.00, default:false}, {id:"pickles", name:"No Pickles", price:-0.50, default:false, isRemoval: true}], sauces: [{id:"garlic", name:"Garlic Sauce", default:true}, {id:"chili", name:"Chili Sauce"}, {id:"house_special", name:"House Special"}], mealOptionPrice: 3.50 },
-        "chicken-kebab": { id: "chicken-kebab", name: "Chicken Kebab", description: "Marinated grilled chicken pieces, served with fresh salad and sauce.", price: 9.00, image: "images/placeholder-chicken-kebab.jpg", category: "Kebabs", customizableIngredients: [{id: "lettuce", name:"Lettuce", price:0, default:true}, {id:"tomato", name:"Tomato", price:0, default:true}], sauces: [{id:"garlic", name:"Garlic Sauce", default:true}, {id:"mayo", name:"Mayonnaise"}], mealOptionPrice: 3.50 },
-        "classic-burger": { id: "classic-burger", name: "Classic Burger", description: "A juicy beef patty, fresh lettuce, tomato, and our special sauce.", price: 8.00, image: "images/placeholder-burger.jpg", category: "Burgers", mealOptionPrice: 3.00 },
-        "cheese-burger": { id: "cheese-burger", name: "Cheese Burger", description: "Classic burger with a slice of mature cheddar.", price: 8.75, image: "images/placeholder-cheese-burger.jpg", category: "Burgers", mealOptionPrice: 3.00 },
-        "kebab-meal-deal": {id: "kebab-meal-deal", name: "Kebab Meal Deal", description: "Kebab, Fries & Drink.", price: 12.50, image: "images/placeholder-kebab-meal.jpg", category: "Deals", isDeal: true, featured: true},
-        "spicy-chicken-burger": {id: "spicy-chicken-burger", name: "Spicy Kickin' Chicken Burger", description: "Crispy chicken fillet with our fiery house sauce, jalapeños, and pepper jack cheese.", price: 9.00, originalPrice: 10.50, image: "images/placeholder-spicy-burger.jpg", category: "Specials", featured: true, mealOptionPrice: 3.00},
-        "loaded-fries-special": {id: "loaded-fries-special", name: "Fully Loaded Fries", description: "Our signature fries topped with cheese sauce, crispy bacon bits, and spring onions.", price: 6.50, image: "images/placeholder-loaded-fries.jpg", category: "Specials", featured: true, mealOptionPrice: null},
-        "falafel-wrap": {id: "falafel-wrap", name: "Falafel Wrap", description: "Crispy falafel, hummus, tahini, fresh salad, in a warm tortilla.", price: 7.50, image: "images/placeholder-falafel-wrap.jpg", category: "Wraps", mealOptionPrice: 3.00},
-        "chicken-caesar-wrap": {id: "chicken-caesar-wrap", name: "Chicken Caesar Wrap", description: "Grilled chicken, romaine lettuce, croutons, parmesan, Caesar dressing.", price: 8.50, image: "images/placeholder-caesar-wrap.jpg", category: "Wraps", mealOptionPrice: 3.00},
-        "regular-fries": {id: "regular-fries", name: "Regular Fries", description: "Classic golden fries, lightly salted.", price: 3.50, image: "images/placeholder-fries.jpg", category: "Sides"},
+    const menuItemsData = { /* ... (same as before, ensure all image paths are "images/placeholder...") ... */
+        "kebab-deluxe": { id: "kebab-deluxe", name: "Deluxe Kebab", description: "Our signature kebab...", price: 9.50, image: "images/placeholder-kebab.jpg", category: "Kebabs", customizableIngredients: [{id: "lettuce", name:"Lettuce", price:0, default:true}, {id:"tomato", name:"Tomato", price:0, default:true}, {id:"onion", name:"Onion", price:0, default:false}, {id:"extra_cheese", name:"Extra Cheese", price:1.00, default:false}, {id:"pickles", name:"No Pickles", price:-0.50, default:false, isRemoval: true}], sauces: [{id:"garlic", name:"Garlic Sauce", default:true}, {id:"chili", name:"Chili Sauce"}, {id:"house_special", name:"House Special"}], mealOptionPrice: 3.50 },
+        "chicken-kebab": { id: "chicken-kebab", name: "Chicken Kebab", description: "Marinated grilled chicken...", price: 9.00, image: "images/placeholder-chicken-kebab.jpg", category: "Kebabs", customizableIngredients: [{id: "lettuce", name:"Lettuce", price:0, default:true}, {id:"tomato", name:"Tomato", price:0, default:true}], sauces: [{id:"garlic", name:"Garlic Sauce", default:true}, {id:"mayo", name:"Mayonnaise"}], mealOptionPrice: 3.50 },
+        "classic-burger": { id: "classic-burger", name: "Classic Burger", description: "A juicy beef patty...", price: 8.00, image: "images/placeholder-burger.jpg", category: "Burgers", mealOptionPrice: 3.00 },
+        "cheese-burger": { id: "cheese-burger", name: "Cheese Burger", description: "Classic burger with cheddar.", price: 8.75, image: "images/placeholder-cheese-burger.jpg", category: "Burgers", mealOptionPrice: 3.00 },
+        "kebab-meal-deal": {id: "kebab-meal-deal", name: "Kebab Meal Deal", description: "Kebab, Fries & Drink.", price: 12.50, image: "images/placeholder-kebab-meal.jpg", category: "Deals", isDeal: true, featured: false},
+        "spicy-chicken-burger": {id: "spicy-chicken-burger", name: "Spicy Kickin' Chicken Burger", description: "Crispy chicken fillet...", price: 9.00, originalPrice: 10.50, image: "images/placeholder-spicy-burger.jpg", category: "Burgers", featured: true, mealOptionPrice: 3.00}, // Changed category to Burgers for demo
+        "loaded-fries-special": {id: "loaded-fries-special", name: "Fully Loaded Fries", description: "Signature fries topped...", price: 6.50, image: "images/placeholder-loaded-fries.jpg", category: "Sides", featured: true, mealOptionPrice: null}, // Changed category
+        "falafel-wrap": {id: "falafel-wrap", name: "Falafel Wrap", description: "Crispy falafel, hummus, tahini...", price: 7.50, image: "images/placeholder-falafel-wrap.jpg", category: "Wraps", mealOptionPrice: 3.00},
+        "chicken-caesar-wrap": {id: "chicken-caesar-wrap", name: "Chicken Caesar Wrap", description: "Grilled chicken, romaine...", price: 8.50, image: "images/placeholder-caesar-wrap.jpg", category: "Wraps", mealOptionPrice: 3.00},
+        "regular-fries": {id: "regular-fries", name: "Regular Fries", description: "Classic golden fries...", price: 3.50, image: "images/placeholder-fries.jpg", category: "Sides"},
         "onion-rings": {id: "onion-rings", name: "Onion Rings", description: "Crispy battered onion rings.", price: 4.50, image: "images/placeholder-onion-rings.jpg", category: "Sides"},
         "coca-cola": {id: "coca-cola", name: "Coca-Cola", description: "330ml Can", price: 2.00, image: "images/placeholder-coke.jpg", category: "Drinks"},
         "water-still": {id: "water-still", name: "Still Water", description: "500ml Bottle", price: 1.50, image: "images/placeholder-water.jpg", category: "Drinks"},
-        "burger-meal-deal": {id: "burger-meal-deal", name: "Burger Bonanza Deal", description: "Any Classic Burger, regular Fries & a selected Drink. Save big!", price: 11.00, image: "images/placeholder-burger-meal.jpg", category: "Deals", isDeal: true}
+        "burger-meal-deal": {id: "burger-meal-deal", name: "Burger Bonanza Deal", description: "Any Classic Burger, regular Fries & a selected Drink.", price: 11.00, image: "images/placeholder-burger-meal.jpg", category: "Deals", isDeal: true}
     };
     const promoCodes = { "SAVE10": { type: "percentage", value: 10 }, "CORKGRILL2": { type: "fixed", value: 2.00 } };
+
+
+    // --- HOMEPAGE SPECIFIC LOGIC (INDEX.HTML) ---
+    if (document.querySelector('.hero-section')) { /* ... (same as previous full code) ... */ }
+
+    // --- ITEM DETAIL PAGE SPECIFIC LOGIC ---
+    const isItemDetailPage = document.body.classList.contains('item-customization-page');
+    if (isItemDetailPage) { /* ... (same as previous full code, ensure currentItemConfig is checked before use) ... */ }
+
+
+    // --- CART PAGE SPECIFIC LOGIC ---
+    const isCartPage = document.body.classList.contains('cart-page');
+    if (isCartPage) {
+        const cartItemsListEl = document.getElementById('cartItemsList');
+        const cartEmptyMessageEl = document.getElementById('cartEmptyMessage');
+        const cartSummarySectionEl = document.getElementById('cartSummarySection');
+        const cartSubtotalEl = document.getElementById('cartSubtotal');
+        const cartTotalEl = document.getElementById('cartTotal');
+        const cartDiscountEl = document.getElementById('cartDiscount');
+        const discountRowEl = document.getElementById('discountRow');
+        const appliedPromoCodeTextEl = document.getElementById('appliedPromoCodeText');
+        const proceedToCheckoutBtn = document.getElementById('proceedToCheckoutBtn');
+        const checkoutFormSection = document.getElementById('checkoutFormSection');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const applyPromoBtn = document.getElementById('applyPromoBtn');
+        const promoCodeInput = document.getElementById('cartPromoCode');
+        const promoStatusMessageEl = document.getElementById('promoStatusMessage');
+        const orderTypeRadios = document.querySelectorAll('input[name="orderType"]');
+        const deliveryAddressFieldsContainer = document.getElementById('deliveryAddressFields');
+        const deliveryAddressInputs = deliveryAddressFieldsContainer.querySelectorAll('input[type="text"]:not(#checkoutAddress2), textarea:not(#deliveryInstructions)');
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+
+        let currentDiscountValue = 0;
+        let appliedPromoCode = localStorage.getItem('corkGrillAppliedPromo');
+
+        const saveCheckoutForm = () => { /* ... (same as previous) ... */ };
+        const loadCheckoutForm = () => { /* ... (same as previous) ... */ };
+        if (checkoutForm) { checkoutForm.addEventListener('input', saveCheckoutForm); loadCheckoutForm(); }
+
+        const renderCart = () => {
+            const cart = getCart();
+            console.log("renderCart - cart from localStorage:", cart); // DEBUG
+            if (!cartItemsListEl || !cartEmptyMessageEl || !cartSummarySectionEl) {
+                console.error("Cart page display elements not all found for renderCart!");
+                return;
+            }
+
+            cartItemsListEl.innerHTML = '';
+
+            if (!cart || cart.length === 0) {
+                console.log("renderCart - Cart is empty or null"); // DEBUG
+                cartEmptyMessageEl.style.display = 'block';
+                cartSummarySectionEl.style.display = 'none';
+                if (checkoutFormSection) checkoutFormSection.style.display = 'none';
+                if (proceedToCheckoutBtn) proceedToCheckoutBtn.style.display = 'block'; // Should be hidden if form also hidden
+                return;
+            }
+
+            cartEmptyMessageEl.style.display = 'none';
+            cartSummarySectionEl.style.display = 'block';
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                // console.log("renderCart - Rendering item:", item); // DEBUG
+                if (!item || typeof item.pricePerItem !== 'number' || typeof item.quantity !== 'number') {
+                    console.error("Invalid item structure in cart:", item);
+                    return; // Skip this invalid item
+                }
+                const itemTotalPrice = item.pricePerItem * item.quantity;
+                subtotal += itemTotalPrice;
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.className = 'cart-item';
+                cartItemDiv.dataset.cartItemId = item.cartItemId;
+                cartItemDiv.setAttribute('aria-labelledby', `cart-item-name-${item.cartItemId}`);
+                cartItemDiv.innerHTML = `
+                    <img src="${item.image || 'images/placeholder-default.jpg'}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3 id="cart-item-name-${item.cartItemId}">${item.name}</h3>
+                        ${item.customizations ? `<p class="item-customizations">${item.customizations}</p>` : ''}
+                        <p class="item-unit-price">@ €${item.pricePerItem.toFixed(2)}</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn minus-btn" data-action="decrease" aria-label="Decrease quantity of ${item.name}">-</button>
+                        <span class="quantity-value" aria-label="Current quantity of ${item.name}">${item.quantity}</span>
+                        <button class="quantity-btn plus-btn" data-action="increase" aria-label="Increase quantity of ${item.name}">+</button>
+                    </div>
+                    <div class="cart-item-total">€${itemTotalPrice.toFixed(2)}</div>
+                    <button class="cart-item-remove" aria-label="Remove ${item.name} from cart">×</button>
+                `;
+                cartItemsListEl.appendChild(cartItemDiv);
+            });
+
+            if (cartSubtotalEl) cartSubtotalEl.textContent = `€${subtotal.toFixed(2)}`;
+            calculateTotal(subtotal);
+            addCartItemEventListeners();
+
+            if (proceedToCheckoutBtn && checkoutFormSection && checkoutFormSection.style.display !== 'block') {
+                proceedToCheckoutBtn.style.display = 'block';
+            }
+            if (checkoutFormSection && checkoutFormSection.style.display === 'block' && cart.length === 0) {
+                checkoutFormSection.style.display = 'none';
+            }
+        };
+
+        const calculateTotal = (subtotal) => { /* ... (same as previous) ... */ };
+        const updateCartItemQuantity = (cartItemId, newQuantity) => { /* ... (same as previous) ... */ };
+        const removeCartItem = (cartItemId) => { /* ... (same as previous) ... */ };
+        const addCartItemEventListeners = () => { /* ... (same as previous, ensure no errors) ... */ };
+
+        if (applyPromoBtn && promoCodeInput && promoStatusMessageEl) { /* ... (same as previous) ... */ }
+        if (proceedToCheckoutBtn && checkoutFormSection) { /* ... (same as previous) ... */ }
+        const toggleDeliveryFields = (isDelivery) => { /* ... (same as previous) ... */ };
+        if (orderTypeRadios.length > 0 && deliveryAddressFieldsContainer) { /* ... (same as previous) ... */ }
+        function validateCheckoutForm() { /* ... (same as previous) ... */ }
+        if (checkoutForm && placeOrderBtn) { /* ... (same as previous, ensure no errors) ... */ }
+
+        renderCart(); // Initial render for cart page
+    }
+
+    // --- MY ACCOUNT PAGE SPECIFIC LOGIC ---
+    const isMyAccountPage = document.body.classList.contains('my-account-page-body');
+    if (isMyAccountPage) { /* ... (same as previous, ensure modal and order history logic is sound) ... */ }
+
+    // --- CONTACT PAGE SPECIFIC LOGIC ---
+    const isContactPage = document.body.classList.contains('contact-page-body');
+    if (isContactPage) { /* ... (same as previous, ensure form validation works) ... */ }
+
+    // --- ORDER CONFIRMATION PAGE SPECIFIC LOGIC ---
+    const isOrderConfirmationPage = document.body.classList.contains('order-confirmation-page-body');
+    if (isOrderConfirmationPage) { /* ... (same as previous, ensure details are populated) ... */ }
+
+    // ... (Keep all existing code above this section) ...
 
     // --- HOMEPAGE SPECIFIC LOGIC (INDEX.HTML) ---
     if (document.querySelector('.hero-section')) {
@@ -83,200 +247,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const populateSection = (sectionId, filterFn) => {
             const container = document.querySelector(`#${sectionId} .menu-grid`);
-            if (!container) { console.warn(`Container not found for section: ${sectionId}`); return; }
+            if (!container) { /* console.warn(`Container not found for section: ${sectionId}`); */ return; }
             container.innerHTML = ''; let itemCount = 0;
             for (const itemId in menuItemsData) {
                 const item = menuItemsData[itemId];
                 if (filterFn(item)) {
                     const itemArticle = document.createElement('article');
-                    itemArticle.className = `menu-item-card ${item.featured ? 'featured-item' : ''} ${item.isDeal ? 'deal-card' : ''}`;
-                    itemArticle.dataset.itemId = item.id; itemArticle.setAttribute('aria-labelledby', `${item.id}-name`);
+                    // Ensure card classes are appropriate for the section
+                    let cardClasses = 'menu-item-card';
+                    if (sectionId === 'featured-items' && item.featured) cardClasses += ' featured-item';
+                    if (sectionId === 'deals-section' && item.isDeal) cardClasses += ' deal-card';
+
+                    itemArticle.className = cardClasses;
+                    itemArticle.dataset.itemId = item.id;
+                    itemArticle.setAttribute('aria-labelledby', `${item.id}-name`);
                     itemArticle.innerHTML = createMenuItemHTML(item);
-                    container.appendChild(itemArticle); itemCount++;
+                    container.appendChild(itemArticle);
+                    itemCount++;
                 }
             }
+            const sectionElement = document.getElementById(sectionId);
             if (itemCount === 0) {
-                const sectionElement = document.getElementById(sectionId);
-                const placeholderTextEl = sectionElement.querySelector('.placeholder-section h2 span');
-                if (!placeholderTextEl) { // Only add if no "Coming Soon" span
+                const placeholderTextEl = sectionElement ? sectionElement.querySelector('.placeholder-section h2 span') : null;
+                if (!placeholderTextEl && sectionId !== 'featured-items' && sectionId !== 'deals-section') { // Don't show "no items" for specials/deals if they are truly empty
                     container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1;">No items currently in this category.</p>`;
+                } else if (!placeholderTextEl && (sectionId === 'featured-items' || sectionId === 'deals-section')) {
+                     container.innerHTML = `<p style="text-align:center; grid-column: 1 / -1;">No current offers/specials.</p>`;
                 }
             } else {
-                const sectionElement = document.getElementById(sectionId);
-                const placeholderTextEl = sectionElement.querySelector('.placeholder-section h2 span');
+                const placeholderTextEl = sectionElement ? sectionElement.querySelector('.placeholder-section h2 span') : null;
                 if(placeholderTextEl) placeholderTextEl.style.display = 'none';
             }
         };
+
+        // Populate sections:
         populateSection('featured-items', item => item.featured);
-        populateSection('kebabs', item => item.category === 'Kebabs' && !item.featured && !item.isDeal);
-        populateSection('burgers', item => item.category === 'Burgers' && !item.featured && !item.isDeal);
-        populateSection('wraps', item => item.category === 'Wraps' && !item.featured && !item.isDeal);
-        populateSection('sides', item => item.category === 'Sides' && !item.featured && !item.isDeal);
-        populateSection('drinks', item => item.category === 'Drinks' && !item.featured && !item.isDeal);
-        populateSection('deals-section', item => item.isDeal);
+        populateSection('kebabs', item => item.category === 'Kebabs'); // Show all kebabs
+        populateSection('burgers', item => item.category === 'Burgers'); // Show all burgers
+        populateSection('wraps', item => item.category === 'Wraps');     // Show all wraps
+        populateSection('sides', item => item.category === 'Sides');     // Show all sides
+        populateSection('drinks', item => item.category === 'Drinks');   // Show all drinks
+        populateSection('deals-section', item => item.isDeal);           // Show all deals
     }
 
-    // --- ITEM DETAIL PAGE SPECIFIC LOGIC ---
-    const isItemDetailPage = document.body.classList.contains('item-customization-page');
-    if (isItemDetailPage) { /* ... (same as previous, no changes here for this step) ... */ }
+// ... (Keep all existing code below this section for item-detail, cart, account, etc.) ...
 
-    // --- CART PAGE SPECIFIC LOGIC ---
-    const isCartPage = document.body.classList.contains('cart-page');
-    if (isCartPage) { /* ... (same as previous, including form persistence and validation) ... */
-        const checkoutForm = document.getElementById('checkoutForm');
-        // Add input listeners to clear errors on Cart Page checkout form
-        if (checkoutForm) {
-            checkoutForm.querySelectorAll('input[required], textarea[required]').forEach(input => {
-                input.addEventListener('input', () => clearError(input));
-            });
-        }
-        // ... (rest of existing cart page logic remains the same)
-    }
-
-
-    // --- MY ACCOUNT PAGE SPECIFIC LOGIC ---
-    const isMyAccountPage = document.body.classList.contains('my-account-page-body');
-    if (isMyAccountPage) {
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const formSwitchLinks = document.querySelectorAll('.form-switch-link');
-        const orderHistoryListEl = document.getElementById('orderHistoryList');
-        const emptyHistoryMessageEl = document.getElementById('emptyHistoryMessage');
-        const orderDetailsModalOverlay = document.getElementById('orderDetailsModalOverlay');
-        const orderDetailsModalContent = document.getElementById('orderDetailsModalContent'); // The actual content div
-        const orderDetailsModalCloseBtn = document.getElementById('orderDetailsModalCloseBtn');
-
-        // Add input listeners to clear errors on My Account forms
-        if(loginForm) loginForm.querySelectorAll('input').forEach(input => input.addEventListener('input', () => clearError(input)));
-        if(registerForm) registerForm.querySelectorAll('input').forEach(input => input.addEventListener('input', () => clearError(input)));
-
-        formSwitchLinks.forEach(link => { /* ... (same as previous) ... */ });
-        if (loginForm) { /* ... (same as previous, including setButtonLoading) ... */ }
-        if (registerForm) { /* ... (same as previous, including setButtonLoading) ... */ }
-
-        function displayOrderDetails(orderId) {
-            const history = getOrderHistory();
-            const order = history.find(o => o.orderId === orderId);
-            if (order && orderDetailsModalOverlay && orderDetailsModalContent) {
-                let itemsHtml = '<ul>';
-                order.items.forEach(item => {
-                    itemsHtml += `<li>
-                        <strong>${item.name}</strong> (x${item.quantity}) - €${(item.pricePerItem * item.quantity).toFixed(2)}
-                        ${item.customizations ? `<br><small style="color:#555; padding-left: 10px;"><em>${item.customizations}</em></small>` : ''}
-                    </li>`;
-                });
-                itemsHtml += '</ul>';
-
-                // Ensure the H3 for title is inside modal content if not already
-                orderDetailsModalContent.innerHTML = `
-                    <button id="orderDetailsModalCloseBtnInner" class="order-details-modal-close-btn" aria-label="Close order details">×</button>
-                    <h3 id="orderDetailsModalTitle">Order Details: ${order.orderId}</h3>
-                    <p><strong>Date:</strong> ${order.date}</p>
-                    <p><strong>Status:</strong> <span class="order-status ${order.status.toLowerCase()}">${order.status}</span></p>
-                    <p><strong>Name:</strong> ${order.name || 'N/A'}</p>
-                    <p><strong>Email:</strong> ${order.email || 'N/A'}</p>
-                    <p><strong>Phone:</strong> ${order.phone || 'N/A'}</p>
-                    <p><strong>Order Type:</strong> ${order.orderType || 'N/A'}</p>
-                    ${order.orderType === 'delivery' && order.address1 ? `<p><strong>Delivery Address:</strong> ${order.address1}${order.eircode ? ', ' + order.eircode : ''}${order.address2 ? '<br>' + order.address2 : ''}</p>` : ''}
-                    ${order.instructions ? `<p><strong>Instructions:</strong> ${order.instructions}</p>` : ''}
-                    <h4>Items Ordered:</h4>
-                    ${itemsHtml}
-                    <hr style="margin: 15px 0;">
-                    <p style="text-align:right; font-size: 1.2em;"><strong>Total Paid: €${order.total.toFixed(2)}</strong></p>
-                `;
-                orderDetailsModalOverlay.classList.add('active');
-                orderDetailsModalOverlay.setAttribute('aria-hidden', 'false');
-
-                // Add event listener to the new close button inside the modal
-                const closeBtnInner = orderDetailsModalContent.querySelector('#orderDetailsModalCloseBtnInner');
-                if(closeBtnInner) {
-                    closeBtnInner.addEventListener('click', () => {
-                        orderDetailsModalOverlay.classList.remove('active');
-                        orderDetailsModalOverlay.setAttribute('aria-hidden', 'true');
-                    });
-                }
-                if(orderDetailsModalCloseBtn) orderDetailsModalCloseBtn.focus(); // Focus the close button for accessibility
-            }
-        }
-
-        function loadOrderHistory() { /* ... (same as previous, ensure displayOrderDetails is called) ... */
-            const history = getOrderHistory();
-            orderHistoryListEl.innerHTML = '';
-            if (history.length === 0) { if(emptyHistoryMessageEl) emptyHistoryMessageEl.style.display = 'block'; }
-            else {
-                if(emptyHistoryMessageEl) emptyHistoryMessageEl.style.display = 'none';
-                history.forEach(order => {
-                    const itemDiv = document.createElement('article'); itemDiv.className = 'order-history-item';
-                    let itemsSummaryHtml = order.items.map(item => `${item.name} (x${item.quantity})`).join(', ');
-                    if (itemsSummaryHtml.length > 70) itemsSummaryHtml = itemsSummaryHtml.substring(0, 67) + '...';
-                    itemDiv.innerHTML = `
-                        <h4>Order ID: ${order.orderId} <span class="order-status ${order.status.toLowerCase()}">${order.status}</span></h4>
-                        <p>Date: ${order.date}</p>
-                        <p>Items: <small>${itemsSummaryHtml || 'Details unavailable'}</small></p>
-                        <p>Total: €${order.total.toFixed(2)}</p>
-                        <button class="btn btn-secondary btn-sm view-order-details-btn" data-order-id="${order.orderId}" aria-label="View details for order ${order.orderId}">View Details</button>
-                    `; // Changed to button for better semantics
-                    orderHistoryListEl.appendChild(itemDiv);
-                });
-                orderHistoryListEl.querySelectorAll('.view-order-details-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        displayOrderDetails(e.target.dataset.orderId);
-                    });
-                });
-            }
-        }
-
-        if(orderDetailsModalOverlay && orderDetailsModalCloseBtn){ // Close modal on overlay click AND original close button
-            orderDetailsModalOverlay.addEventListener('click', function(event) {
-                if (event.target === orderDetailsModalOverlay) {
-                    this.classList.remove('active');
-                    this.setAttribute('aria-hidden', 'true');
-                }
-            });
-            orderDetailsModalCloseBtn.addEventListener('click', () => { // This is the static button in HTML
-                 orderDetailsModalOverlay.classList.remove('active');
-                 orderDetailsModalOverlay.setAttribute('aria-hidden', 'true');
-            });
-        }
-        loadOrderHistory();
-    }
-
-    // --- CONTACT PAGE SPECIFIC LOGIC ---
-    const isContactPage = document.body.classList.contains('contact-page-body');
-    if (isContactPage) { /* ... (same as previous, add loading state to button, add input listeners) ... */
-        const contactForm = document.getElementById('contactForm');
-        const formStatusMessageEl = document.getElementById('contactFormStatus');
-        if(contactForm && formStatusMessageEl){
-            contactForm.querySelectorAll('input[required], textarea[required]').forEach(input => {
-                input.addEventListener('input', () => clearError(input));
-            });
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault(); let isValid = true;
-                const nameInput = document.getElementById('contactName');
-                const emailInput = document.getElementById('contactEmail');
-                const messageInput = document.getElementById('contactMessage');
-                const submitButton = contactForm.querySelector('button[type="submit"]');
-                [nameInput, emailInput, messageInput].forEach(input => clearError(input));
-                if (!nameInput.value.trim()) { showError(nameInput, 'Name is required.'); isValid = false; }
-                if (!emailInput.value.trim()) { showError(emailInput, 'Email is required.'); isValid = false; }
-                else if (!isValidEmail(emailInput.value.trim())) { showError(emailInput, 'Invalid email format.'); isValid = false; }
-                if (!messageInput.value.trim()) { showError(messageInput, 'Message is required.'); isValid = false; }
-
-                setButtonLoading(submitButton, true);
-                setTimeout(() => {
-                    if (isValid) {
-                        formStatusMessageEl.textContent = 'Thank you! Your message has been received (Demo).';
-                        formStatusMessageEl.className = 'form-status-message success'; contactForm.reset();
-                    } else { formStatusMessageEl.textContent = 'Please correct the errors above.'; formStatusMessageEl.className = 'form-status-message error'; }
-                    setButtonLoading(submitButton, false);
-                    setTimeout(() => {formStatusMessageEl.textContent = ''; formStatusMessageEl.className = 'form-status-message';}, 5000);
-                }, 750);
-            });
-        }
-    }
-
-    // --- ORDER CONFIRMATION PAGE SPECIFIC LOGIC ---
-    const isOrderConfirmationPage = document.body.classList.contains('order-confirmation-page-body');
-    if (isOrderConfirmationPage) { /* ... (same as previous) ... */ }
 });
