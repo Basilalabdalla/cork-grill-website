@@ -4,13 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - Cork Grill</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Manage your Cork Grill account, view order history, and update your details for a faster online ordering experience.">
+    <meta name="keywords" content="cork grill, my account, order history, customer account">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="images/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body class="my-account-page-body">
     <header class="site-header">
          <div class="container">
-            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
-            <nav class="main-nav">
+            <a href="index.html" class="logo-link" aria-label="Cork Grill Homepage"><img src="images/placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav" aria-label="Main navigation" id="mainNavMenu">
                 <a href="index.html">Menu</a>
                 <a href="index.html#deals-section">Deals</a>
                 <a href="index.html#featured-items">Specials</a>
@@ -18,94 +28,75 @@
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
             </nav>
-            <a href="cart.html" class="cart-icon-link">
-                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+            <a href="cart.html" class="cart-icon-link" aria-label="View your shopping cart">
+                <img src="images/placeholder-cart-icon.svg" alt="" class="cart-icon-img">
                 <span id="globalCartCount" class="cart-count">0</span>
+                <span class="visually-hidden">items in cart</span>
             </a>
-            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mainNavMenu">&#9776;</button>
         </div>
     </header>
 
     <main class="container page-fade-in">
         <h1>My Account</h1>
-
         <div class="account-layout">
-            <section class="account-section login-register-section">
-                <h2>Login or Create Account</h2>
+            <section class="account-section login-register-section" aria-labelledby="login-register-heading">
+                <h2 id="login-register-heading">Login or Create Account</h2>
                 <p>Access your order history, save addresses, and enjoy a faster checkout experience.</p>
-
                 <form id="loginForm" class="account-form" novalidate>
                     <h3>Login</h3>
                     <div class="form-group">
                         <label for="loginEmail">Email:</label>
-                        <input type="email" id="loginEmail" name="loginEmail" required>
+                        <input type="email" id="loginEmail" name="loginEmail" required autocomplete="email">
                         <span class="error-message" aria-live="polite"></span>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password:</label>
-                        <input type="password" id="loginPassword" name="loginPassword" required>
+                        <input type="password" id="loginPassword" name="loginPassword" required autocomplete="current-password">
                         <span class="error-message" aria-live="polite"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">
+                        <span class="btn-text">Login</span>
+                        <span class="loading-spinner" style="display: none;"></span>
+                    </button>
                     <p class="form-switch-text">Don't have an account? <a href="#registerForm" class="form-switch-link">Register here</a>.</p>
                     <div class="form-status-message" id="loginStatusMessage" aria-live="polite"></div>
                 </form>
-
                 <form id="registerForm" class="account-form" style="display: none;" novalidate>
                     <h3>Create Account</h3>
                     <div class="form-group">
                         <label for="registerName">Full Name:</label>
-                        <input type="text" id="registerName" name="registerName" required>
+                        <input type="text" id="registerName" name="registerName" required autocomplete="name">
                         <span class="error-message" aria-live="polite"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerEmail">Email:</label>
-                        <input type="email" id="registerEmail" name="registerEmail" required>
+                        <input type="email" id="registerEmail" name="registerEmail" required autocomplete="email">
                         <span class="error-message" aria-live="polite"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerPassword">Password (min. 6 characters):</label>
-                        <input type="password" id="registerPassword" name="registerPassword" required minlength="6">
+                        <input type="password" id="registerPassword" name="registerPassword" required minlength="6" autocomplete="new-password">
                         <span class="error-message" aria-live="polite"></span>
                     </div>
                     <div class="form-group">
                         <label for="registerConfirmPassword">Confirm Password:</label>
-                        <input type="password" id="registerConfirmPassword" name="registerConfirmPassword" required>
+                        <input type="password" id="registerConfirmPassword" name="registerConfirmPassword" required autocomplete="new-password">
                         <span class="error-message" aria-live="polite"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary" id="registerBtn">
+                        <span class="btn-text">Register</span>
+                        <span class="loading-spinner" style="display: none;"></span>
+                    </button>
                      <p class="form-switch-text">Already have an account? <a href="#loginForm" class="form-switch-link">Login here</a>.</p>
                      <div class="form-status-message" id="registerStatusMessage" aria-live="polite"></div>
                 </form>
             </section>
-
-            <section class="account-section order-history-section">
-                <h2>Your Order History</h2>
+            <section class="account-section order-history-section" aria-labelledby="order-history-heading">
+                <h2 id="order-history-heading">Your Order History</h2>
                 <div id="orderHistoryList">
-                    {/* Will be populated by JS */}
                     <p class="empty-history-message" id="emptyHistoryMessage">You have no past orders yet or are not logged in. <a href="index.html">Start shopping!</a></p>
                 </div>
             </section>
         </div>
     </main>
-
-    <footer class="site-footer-bottom">
-        <div class="container footer-content">
-            <div class="footer-info">
-                <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
-                <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
-            </div>
-            <div class="footer-links">
-                <a href="about.html">About Us</a> |
-                <a href="contact.html">Contact</a> |
-                <a href="#privacy">Privacy Policy (Demo)</a> |
-                <a href="#terms">Terms of Service (Demo)</a>
-            </div>
-        </div>
-    </footer>
-
-    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top">⇧</a>
-
-    <script src="script.js"></script>
-</body>
-</html>
