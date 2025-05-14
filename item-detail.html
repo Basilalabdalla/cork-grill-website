@@ -3,29 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {/* Title will be updated by JS */}
     <title>Customize Your Order - Cork Grill</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta name="description" content="Customize your kebab, burger, or meal at Cork Grill. Choose your ingredients, sauces, and make it a meal for the perfect takeaway or delivery.">
+    {/* Keywords could be dynamic or general */}
+    <meta name="keywords" content="cork grill, customize food, online order, kebab customization, burger customization">
+
+    {/* Open Graph / Facebook Meta Tags - These should ideally be dynamic based on item */}
+    <meta property="og:title" content="Customize Your Order - Cork Grill">
+    <meta property="og:description" content="Personalize your meal from Cork Grill with fresh ingredients and delicious sauces.">
+    <meta property="og:image" content="https://www.your-cork-grill-domain.com/images/social-preview-corkgrill.jpg"> {/* TODO: Replace, or make dynamic */}
+    <meta property="og:type" content="website">
+    {/* og:url would be the specific item page URL */}
+
+    <link rel="stylesheet" href="css/style.css">
+    {/* Favicon Links */}
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="images/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body class="item-customization-page">
     <header class="site-header">
         <div class="container">
-            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
-            <nav class="main-nav">
+            <a href="index.html" class="logo-link" aria-label="Cork Grill Homepage"><img src="images/placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
+            <nav class="main-nav" aria-label="Main navigation" id="mainNavMenu">
                 <a href="index.html">Menu</a>
                 <a href="index.html#deals-section">Deals</a>
+                <a href="index.html#featured-items">Specials</a>
                 <a href="my-account.html">My Account</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
             </nav>
-            <a href="cart.html" class="cart-icon-link">
-                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+            <a href="cart.html" class="cart-icon-link" aria-label="View your shopping cart">
+                <img src="images/placeholder-cart-icon.svg" alt="" class="cart-icon-img">
                 <span id="globalCartCount" class="cart-count">0</span>
+                <span class="visually-hidden">items in cart</span>
             </a>
-            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mainNavMenu">☰</button>
         </div>
     </header>
 
-    <main class="container item-customization-page-content">
+    <main class="container item-customization-page-content page-fade-in">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li><a href="index.html">Menu</a></li>
@@ -36,7 +59,7 @@
 
         <div class="item-detail-layout">
             <div class="item-detail-image-column">
-                <img src="placeholder-kebab.jpg" alt="Deluxe Kebab" id="itemDetailImage">
+                <img src="images/placeholder-kebab.jpg" alt="Deluxe Kebab" id="itemDetailImage">
             </div>
             <div class="item-detail-options-column">
                 <h1 id="itemDetailName">Deluxe Kebab</h1>
@@ -44,23 +67,17 @@
                 <p class="item-base-price">Base Price: <span id="itemBasePrice">€9.50</span></p>
 
                 <form id="customizationForm">
-                    <section class="customization-section">
-                        <h3>Choose Your Ingredients:</h3>
+                    <section class="customization-section" aria-labelledby="ingredients-heading">
+                        <h3 id="ingredients-heading">Choose Your Ingredients:</h3>
                         <div class="option-group choice-group">
-                            <label class="choice-label"><input type="checkbox" name="lettuce" data-price-change="0" checked> <span>Lettuce</span></label>
-                            <label class="choice-label"><input type="checkbox" name="tomato" data-price-change="0" checked> <span>Tomato</span></label>
-                            <label class="choice-label"><input type="checkbox" name="onion" data-price-change="0"> <span>Onion</span></label>
-                            <label class="choice-label"><input type="checkbox" name="extra_cheese" data-price-change="1.00"> <span>Extra Cheese (+€1.00)</span></label>
-                            <label class="choice-label"><input type="checkbox" name="pickles" data-price-change="-0.50"> <span>No Pickles (-€0.50)</span></label>
+                            {/* Options populated by JS */}
                         </div>
                     </section>
 
-                    <section class="customization-section">
-                        <h3>Select Your Sauce:</h3>
+                    <section class="customization-section" aria-labelledby="sauce-heading">
+                        <h3 id="sauce-heading">Select Your Sauce:</h3>
                         <div class="option-group radio-group choice-group">
-                            <label class="choice-label"><input type="radio" name="sauce" value="garlic" checked> <span>Garlic Sauce</span></label>
-                            <label class="choice-label"><input type="radio" name="sauce" value="chili"> <span>Chili Sauce</span></label>
-                            <label class="choice-label"><input type="radio" name="sauce" value="house_special"> <span>House Special</span></label>
+                           {/* Options populated by JS */}
                         </div>
                     </section>
 
@@ -77,7 +94,7 @@
                             <input type="number" class="quantity-value" value="1" min="1" name="quantity" aria-label="Quantity">
                             <button type="button" class="quantity-btn plus-btn" data-action="increase" aria-label="Increase quantity">+</button>
                         </div>
-                        <div class="final-price-display">
+                        <div class="final-price-display" aria-live="polite"> {/* Announce price changes */}
                             Total: <span id="finalItemPrice" class="price-value">€9.50</span>
                         </div>
                     </div>
@@ -87,18 +104,27 @@
         </div>
     </main>
 
-    <!-- Toast Message Container -->
     <div id="toastContainer">
-        <div id="addToCartMessage" class="add-to-cart-message">Item Added!</div>
+        <div id="addToCartMessage" class="add-to-cart-message" role="status" aria-live="assertive">Item Added!</div>
     </div>
 
-
     <footer class="site-footer-bottom">
-        <div class="container">
-            <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
-            <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
+                <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
+            </div>
+            <nav class="footer-links" aria-label="Footer navigation">
+                <a href="about.html">About Us</a> |
+                <a href="contact.html">Contact</a> |
+                <a href="#privacy">Privacy Policy (Demo)</a> |
+                <a href="#terms">Terms of Service (Demo)</a>
+            </nav>
         </div>
     </footer>
-    <script src="script.js"></script>
+
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top" aria-label="Scroll back to top of page">⇧</a>
+
+    <script src="js/script.js"></script>
 </body>
 </html>

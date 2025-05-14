@@ -115,8 +115,21 @@ h3 {
     transform: translateY(0);
   }
 }
+/* Visually Hidden Class for Accessibility */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap; /* For single line text */
+  border: 0;
+}
+
 /* Placeholder Images - Keep this global for now */
-[src^=placeholder-] {
+[src^="images/placeholder-"] { /* Adjusted path if placeholders are in images/ */
   background-color: #e0e0e0;
   display: flex;
   align-items: center;
@@ -126,29 +139,29 @@ h3 {
   text-align: center;
 }
 
-.logo[src^=placeholder-] {
+.logo[src^="images/placeholder-"] {
   min-height: 40px;
   width: 120px;
   font-size: 0.9rem;
 }
 
 @media (min-width: 768px) {
-  .logo[src^=placeholder-] {
+  .logo[src^="images/placeholder-"] {
     min-height: 45px;
     width: 130px;
     font-size: 1rem;
   }
 }
-.item-image-container [src^=placeholder-] {
+.item-image-container [src^="images/placeholder-"] {
   min-height: 180px;
 }
 
 @media (min-width: 768px) {
-  .item-image-container [src^=placeholder-] {
+  .item-image-container [src^="images/placeholder-"] {
     min-height: 200px;
   }
 }
-.cart-icon img[src^=placeholder-] {
+.cart-icon img[src^="images/placeholder-"] {
   width: 26px;
   height: 26px;
   border: 1px solid #ccc;
@@ -156,29 +169,33 @@ h3 {
 }
 
 @media (min-width: 768px) {
-  .cart-icon img[src^=placeholder-] {
+  .cart-icon img[src^="images/placeholder-"] {
     width: 28px;
     height: 28px;
   }
 }
-.category-card .category-image-wrapper [src^=placeholder-] {
+.category-card .category-image-wrapper [src^="images/placeholder-"] {
   height: 100%;
   width: 100%;
   object-fit: contain;
-} /* Adjusted for category image wrapper */
-.cart-item-image[src^=placeholder-] {
+}
+
+.cart-item-image[src^="images/placeholder-"] {
   min-height: 70px;
   min-width: 70px;
 }
 
 @media (min-width: 768px) {
-  .cart-item-image[src^=placeholder-] {
+  .cart-item-image[src^="images/placeholder-"] {
     min-height: 80px;
     min-width: 80px;
   }
 }
-.page-hero-image[src^=placeholder-] {
+.page-hero-image[src^="images/placeholder-"] {
   min-height: 200px;
+  background-color: #555;
+  color: #fff;
+  font-size: 1rem;
 }
 
 .site-header {

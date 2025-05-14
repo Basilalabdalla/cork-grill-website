@@ -1,144 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart - Cork Grill</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="cart-page">
-    <header class="site-header">
-         <div class="container">
-            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
-            <nav class="main-nav">
-                <a href="index.html">Menu</a>
-                <a href="index.html#deals-section">Deals</a>
-                <a href="my-account.html">My Account</a>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-            <a href="cart.html" class="cart-icon-link active">
-                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
-                <span id="globalCartCount" class="cart-count">0</span>
-            </a>
-            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
-        </div>
-    </header>
-
-    <main class="container cart-page-content">
-        <h1>Your Shopping Cart</h1>
-
-        <div class="cart-layout">
-            <div id="cartItemsList" class="cart-items-column">
-                {/* Cart items will be dynamically inserted here */}
-            </div>
-
-            <div class="cart-summary-column">
-                <div class="cart-summary" id="cartSummarySection">
-                    <div class="promo-code-section">
-                        <input type="text" id="cartPromoCode" placeholder="Enter Promo Code">
-                        <button class="btn btn-secondary btn-apply-promo" id="applyPromoBtn">Apply</button>
-                    </div>
-                    <small id="promoStatusMessage" class="promo-status-message"></small>
-
-                    <div class="summary-details">
-                        <div class="summary-row">
-                            <span>Subtotal:</span>
-                            <span id="cartSubtotal">€0.00</span>
-                        </div>
-                        <div class="summary-row discount-row" id="discountRow" style="display:none;">
-                            <span>Discount (<span id="appliedPromoCodeText"></span>):</span>
-                            <span id="cartDiscount">-€0.00</span>
-                        </div>
-                        <hr class="summary-divider">
-                        <div class="summary-row total-row">
-                            <span>Total:</span>
-                            <strong id="cartTotal">€0.00</strong>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary btn-checkout" id="proceedToCheckoutBtn">Proceed to Checkout</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="cart-empty-message" id="cartEmptyMessage" style="display:none;">
-            <p>Your cart is currently empty.</p>
-            <a href="index.html" class="btn btn-primary">Continue Shopping</a>
-        </div>
-
-        <section id="checkoutFormSection" class="checkout-form" style="display:none;">
-            <h2>Checkout Details</h2>
-            <form id="checkoutForm" novalidate> {/* Added novalidate to disable browser's default validation popups */}
-                <fieldset>
-                    <legend>Your Information</legend>
-                    <div class="form-group">
-                        <label for="checkoutName">Full Name:</label>
-                        <input type="text" id="checkoutName" name="checkoutName" required>
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="checkoutEmail">Email:</label>
-                        <input type="email" id="checkoutEmail" name="checkoutEmail" required>
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="checkoutPhone">Phone Number:</label>
-                        <input type="tel" id="checkoutPhone" name="checkoutPhone" required pattern="[0-9\s\-()+]{7,}"> {/* Basic pattern for phone */}
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Order Type</legend>
-                    <div class="form-group form-group-radio">
-                        <label><input type="radio" name="orderType" value="pickup" checked> Pickup</label>
-                        <label><input type="radio" name="orderType" value="delivery"> Delivery</label>
-                    </div>
-                </fieldset>
-
-                <fieldset id="deliveryAddressFields" class="delivery-fields" style="display:none;">
-                    <legend>Delivery Address</legend>
-                    <div class="form-group">
-                        <label for="checkoutAddress1">Address Line 1:</label>
-                        <input type="text" id="checkoutAddress1" name="checkoutAddress1"> {/* Required will be set by JS */}
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="checkoutAddress2">Address Line 2 (Optional):</label>
-                        <input type="text" id="checkoutAddress2" name="checkoutAddress2">
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="checkoutEircode">Eircode:</label>
-                        <input type="text" id="checkoutEircode" name="checkoutEircode"> {/* Required will be set by JS */}
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="deliveryInstructions">Delivery Instructions (Optional):</label>
-                        <textarea id="deliveryInstructions" name="deliveryInstructions" rows="3"></textarea>
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Payment</legend>
-                    <p class="payment-placeholder">Payment processing will be handled securely. (Online payment options coming soon!)</p>
-                    <div class="form-group">
-                         <label><input type="radio" name="paymentMethod" value="cash_on_pickup" checked> Pay on Pickup/Delivery (Cash/Card)</label>
-                    </div>
-                </fieldset>
-
-                <button type="submit" class="btn btn-primary btn-place-order">Place My Order</button>
-            </form>
-        </section>
-    </main>
-
-    <footer class="site-footer-bottom">
-         <div class="container">
-            <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
-            <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
-        </div>
-    </footer>
-    <script src="script.js"></script>
-</body>
-</html>
+                        <!-- ... (rest of cart.html above this) ... -->
+                        <section id="checkoutFormSection" class="checkout-form" style="display:none;" aria-labelledby="checkout-heading">
+                            <h2 id="checkout-heading">Checkout Details</h2>
+                            <form id="checkoutForm" novalidate>
+                                <fieldset>
+                                    <legend>Your Information</legend>
+                                    <div class="form-group">
+                                        <label for="checkoutName">Full Name:</label>
+                                        <input type="text" id="checkoutName" name="checkoutName" required autocomplete="name">
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="checkoutEmail">Email:</label>
+                                        <input type="email" id="checkoutEmail" name="checkoutEmail" required autocomplete="email">
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="checkoutPhone">Phone Number:</label>
+                                        <input type="tel" id="checkoutPhone" name="checkoutPhone" required pattern="[0-9\s\-()+]{7,}" autocomplete="tel">
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                </fieldset>
+                
+                                <fieldset>
+                                    <legend>Order Type</legend>
+                                    <div class="form-group form-group-radio">
+                                        {/* Ensure these have unique IDs if you want to save/load their state, though name attribute handles selection */}
+                                        <label><input type="radio" id="orderTypePickup" name="orderType" value="pickup" checked> Pickup</label>
+                                        <label><input type="radio" id="orderTypeDelivery" name="orderType" value="delivery"> Delivery</label>
+                                    </div>
+                                </fieldset>
+                
+                                <fieldset id="deliveryAddressFields" class="delivery-fields" style="display:none;">
+                                    <legend>Delivery Address</legend>
+                                    <div class="form-group">
+                                        <label for="checkoutAddress1">Address Line 1:</label>
+                                        <input type="text" id="checkoutAddress1" name="checkoutAddress1" autocomplete="street-address">
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="checkoutAddress2">Address Line 2 (Optional):</label>
+                                        <input type="text" id="checkoutAddress2" name="checkoutAddress2" autocomplete="address-line2">
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="checkoutEircode">Eircode:</label>
+                                        <input type="text" id="checkoutEircode" name="checkoutEircode" autocomplete="postal-code">
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="deliveryInstructions">Delivery Instructions (Optional):</label>
+                                        <textarea id="deliveryInstructions" name="deliveryInstructions" rows="3"></textarea>
+                                        <span class="error-message" aria-live="polite"></span>
+                                    </div>
+                                </fieldset>
+                
+                                <fieldset>
+                                    <legend>Payment</legend>
+                                    <p class="payment-placeholder">Payment processing will be handled securely. (Online payment options coming soon!)</p>
+                                    <div class="form-group">
+                                         <label><input type="radio" id="paymentCash" name="paymentMethod" value="cash_on_pickup" checked> Pay on Pickup/Delivery (Cash/Card)</label>
+                                    </div>
+                                </fieldset>
+                
+                                <button type="submit" class="btn btn-primary btn-place-order" id="placeOrderBtn">
+                                    <span class="btn-text">Place My Order</span>
+                                    <span class="loading-spinner" style="display: none;"></span>
+                                </button>
+                            </form>
+                        </section>
+                                        <!-- ... (rest of cart.html below this) ... -->

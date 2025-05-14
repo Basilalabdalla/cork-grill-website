@@ -3,190 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cork Grill - Order Online</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Consider adding a favicon link here -->
-    <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+    <title>Cork Grill - Order Delicious Kebabs, Burgers & Grills Online in Cork</title>
+    <meta name="description" content="Order authentic kebabs, juicy burgers, and tasty grills online from Cork Grill, Victorian Quarter. Dine-in, takeaway, and delivery available. Explore our menu!">
+    <meta name="keywords" content="cork grill, kebabs cork, burgers cork, takeaway cork, restaurant victorian quarter, online order food, food delivery cork">
+    <meta property="og:title" content="Cork Grill - Order Your Favourite Grills Online!">
+    <meta property="og:description" content="Freshly prepared kebabs, burgers, and more. Easy online ordering for pickup or delivery in Cork.">
+    <meta property="og:image" content="images/social-preview-corkgrill.jpg"> {/* TODO: Create this image */}
+    <meta property="og:url" content="https://www.your-cork-grill-domain.com/"> {/* TODO: Replace with actual live URL */}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Cork Grill">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cork Grill - Best Kebabs & Burgers in Cork!">
+    <meta name="twitter:description" content="Order delicious grilled food online from Cork Grill. Quick, fresh, and flavourful.">
+    <meta name="twitter:image" content="images/social-preview-corkgrill.jpg"> {/* TODO: Create this image */}
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png"> {/* TODO: Create favicons in images/favicons/ */}
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="images/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="index.html" class="logo-link"><img src="placeholder-logo.png" alt="Cork Grill Logo" class="logo"></a>
-            <nav class="main-nav">
+            <a href="index.html" class="logo-link" aria-label="Cork Grill Homepage">
+                <img src="images/placeholder-logo.png" alt="Cork Grill Logo" class="logo">
+            </a>
+            <nav class="main-nav" aria-label="Main navigation" id="mainNavMenu">
                 <a href="index.html" class="active">Menu</a>
-                <a href="#deals-section">Deals</a>
-                <a href="#featured-items">Specials</a> {/* New link */}
+                <a href="index.html#deals-section">Deals</a>
+                <a href="index.html#featured-items">Specials</a>
                 <a href="my-account.html">My Account</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact</a>
             </nav>
-            <a href="cart.html" class="cart-icon-link">
-                <img src="placeholder-cart-icon.svg" alt="Cart" class="cart-icon-img">
+            <a href="cart.html" class="cart-icon-link" aria-label="View your shopping cart">
+                <img src="images/placeholder-cart-icon.svg" alt="" class="cart-icon-img"> {/* Decorative, alt="" is fine */}
                 <span id="globalCartCount" class="cart-count">0</span>
+                <span class="visually-hidden">items in cart</span>
             </a>
-            <button class="mobile-nav-toggle" aria-label="Toggle navigation">☰</button>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mainNavMenu">
+                ☰ {/* Hamburger Icon */}
+            </button>
         </div>
     </header>
 
-    <main>
+    <main class="page-fade-in">
         <section class="hero-section container">
-            <h1>Taste the Best Grills in Cork!</h1> {/* Slightly more enticing */}
+            <h1>Taste the Best Grills in Cork!</h1>
             <p>Freshly prepared Kebabs, Burgers & Grills. Order online for quick pickup or delivery.</p>
             <a href="#menu-categories" class="btn btn-primary hero-cta">Explore Our Menu</a>
         </section>
 
-        <section id="menu-categories" class="menu-categories-section container">
-            <h2>Browse by Category</h2>
+        <section id="menu-categories" class="menu-categories-section container" aria-labelledby="menu-categories-title">
+            <h2 id="menu-categories-title">Browse by Category</h2>
             <div class="category-grid">
                 <a href="#kebabs" class="category-card">
-                    <div class="category-image-wrapper"><img src="placeholder-category-kebab.jpg" alt="Kebabs"></div>
+                    <div class="category-image-wrapper"><img src="images/placeholder-category-kebab.jpg" alt="A delicious looking kebab"></div>
                     <h3>Kebabs</h3>
                 </a>
                 <a href="#burgers" class="category-card">
-                    <div class="category-image-wrapper"><img src="placeholder-category-burger.jpg" alt="Burgers"></div>
+                    <div class="category-image-wrapper"><img src="images/placeholder-category-burger.jpg" alt="A juicy burger"></div>
                     <h3>Burgers</h3>
                 </a>
                 <a href="#wraps" class="category-card">
-                    <div class="category-image-wrapper"><img src="placeholder-category-wrap.jpg" alt="Wraps"></div>
+                    <div class="category-image-wrapper"><img src="images/placeholder-category-wrap.jpg" alt="A filled wrap"></div>
                     <h3>Wraps</h3>
                 </a>
                 <a href="#sides" class="category-card">
-                    <div class="category-image-wrapper"><img src="placeholder-category-sides.jpg" alt="Sides"></div>
+                    <div class="category-image-wrapper"><img src="images/placeholder-category-sides.jpg" alt="Golden french fries"></div>
                     <h3>Sides</h3>
                 </a>
                 <a href="#drinks" class="category-card">
-                    <div class="category-image-wrapper"><img src="placeholder-category-drinks.jpg" alt="Drinks"></div>
+                    <div class="category-image-wrapper"><img src="images/placeholder-category-drinks.jpg" alt="Assorted cold drinks"></div>
                     <h3>Drinks</h3>
                 </a>
                  <a href="#deals-section" class="category-card category-deals">
-                    <div class="category-image-wrapper"><img src="placeholder-category-deals.jpg" alt="Meal Deals"></div>
+                    <div class="category-image-wrapper"><img src="images/placeholder-category-deals.jpg" alt="Special meal deal offer"></div>
                     <h3>Meal Deals</h3>
                 </a>
             </div>
         </section>
 
-        {/* NEW Featured Items Section */}
-        <section id="featured-items" class="featured-items-section container">
-            <h2>Today's Specials</h2>
+        <section id="featured-items" class="featured-items-section container" aria-labelledby="featured-items-title">
+            <h2 id="featured-items-title">Today's Specials</h2>
             <div class="menu-grid">
-                {/* Example Featured Item (would be populated by admin) */}
-                <div class="menu-item-card featured-item" data-item-id="spicy-chicken-burger">
-                    <div class="item-image-container"><img src="placeholder-spicy-burger.jpg" alt="Spicy Chicken Burger"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Spicy Kickin' Chicken Burger</h3>
-                        <p class="item-description">Crispy chicken fillet with our fiery house sauce, jalapeños, and pepper jack cheese.</p>
-                        <p class="item-price">€9.00 <span class="original-price">€10.50</span></p> {/* Example of showing a discount */}
-                    </div>
-                    <a href="item-detail.html?item=spicy-chicken-burger" class="btn btn-primary btn-view-item">Order Now</a>
-                </div>
-                <div class="menu-item-card featured-item" data-item-id="loaded-fries-special">
-                    <div class="item-image-container"><img src="placeholder-loaded-fries.jpg" alt="Loaded Fries Special"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Fully Loaded Fries</h3>
-                        <p class="item-description">Our signature fries topped with cheese sauce, crispy bacon bits, and spring onions.</p>
-                        <p class="item-price">€6.50</p>
-                    </div>
-                    <a href="item-detail.html?item=loaded-fries-special" class="btn btn-primary btn-view-item">Try Them!</a>
-                </div>
+                {/* Featured items will be populated by JS */}
             </div>
         </section>
 
-
-        <section id="kebabs" class="menu-items-section container">
-            <h2>Kebabs</h2>
+        <section id="kebabs" class="menu-items-section container" aria-labelledby="kebabs-title">
+            <h2 id="kebabs-title">Kebabs</h2>
             <div class="menu-grid">
-                <div class="menu-item-card" data-item-id="kebab-deluxe">
-                    <div class="item-image-container"><img src="placeholder-kebab.jpg" alt="Deluxe Kebab"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Deluxe Kebab</h3>
-                        <p class="item-description">Signature kebab with all the trimmings.</p>
-                        <p class="item-price">€9.50</p>
-                    </div>
-                    <a href="item-detail.html?item=kebab-deluxe" class="btn btn-primary btn-view-item">Customize & Add</a>
-                </div>
-                <div class="menu-item-card" data-item-id="chicken-kebab">
-                    <div class="item-image-container"><img src="placeholder-chicken-kebab.jpg" alt="Chicken Kebab"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Chicken Kebab</h3>
-                        <p class="item-description">Marinated grilled chicken pieces.</p>
-                        <p class="item-price">€9.00</p>
-                    </div>
-                    <a href="item-detail.html?item=chicken-kebab" class="btn btn-primary btn-view-item">Customize & Add</a>
-                </div>
+                {/* JS will populate this */}
             </div>
         </section>
 
-        <section id="burgers" class="menu-items-section container">
-            <h2>Burgers</h2>
+        <section id="burgers" class="menu-items-section container" aria-labelledby="burgers-title">
+            <h2 id="burgers-title">Burgers</h2>
             <div class="menu-grid">
-                 <div class="menu-item-card" data-item-id="classic-burger">
-                    <div class="item-image-container"><img src="placeholder-burger.jpg" alt="Classic Burger"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Classic Burger</h3>
-                        <p class="item-description">A juicy beef patty, fresh toppings.</p>
-                        <p class="item-price">€8.00</p>
-                    </div>
-                    <a href="item-detail.html?item=classic-burger" class="btn btn-primary btn-view-item">Customize & Add</a>
-                </div>
-                <div class="menu-item-card" data-item-id="cheese-burger">
-                    <div class="item-image-container"><img src="placeholder-cheese-burger.jpg" alt="Cheese Burger"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Cheese Burger</h3>
-                        <p class="item-description">Classic burger with a slice of cheddar.</p>
-                        <p class="item-price">€8.75</p>
-                    </div>
-                    <a href="item-detail.html?item=cheese-burger" class="btn btn-primary btn-view-item">Customize & Add</a>
-                </div>
+                {/* JS will populate this */}
             </div>
         </section>
 
-        {/* Placeholder for Wraps, Sides, Drinks sections */}
-        <section id="wraps" class="menu-items-section container placeholder-section"><h2>Wraps <span>(Coming Soon)</span></h2></section>
-        <section id="sides" class="menu-items-section container placeholder-section"><h2>Sides & Extras <span>(Coming Soon)</span></h2></section>
-        <section id="drinks" class="menu-items-section container placeholder-section"><h2>Drinks <span>(Coming Soon)</span></h2></section>
-
-
-        <section id="deals-section" class="menu-items-section container deals-highlight-section"> {/* Added class for specific styling */}
-            <h2>Our Best Meal Deals</h2>
+        <section id="wraps" class="menu-items-section container" aria-labelledby="wraps-title">
+            <h2 id="wraps-title">Wraps</h2>
             <div class="menu-grid">
-                 <div class="menu-item-card deal-card" data-item-id="kebab-meal-deal">
-                    <div class="item-image-container"><img src="placeholder-kebab-meal.jpg" alt="Kebab Meal Deal"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Kebab Meal Deal</h3>
-                        <p class="item-description">Your choice of Kebab, regular Fries & a selected Drink. Great value!</p>
-                        <p class="item-price">€12.50</p>
-                    </div>
-                    <a href="item-detail.html?item=kebab-meal-deal" class="btn btn-primary btn-view-item">View Deal Details</a>
-                </div>
-                <div class="menu-item-card deal-card" data-item-id="burger-meal-deal">
-                    <div class="item-image-container"><img src="placeholder-burger-meal.jpg" alt="Burger Meal Deal"></div>
-                    <div class="item-info">
-                        <h3 class="item-name">Burger Bonanza Deal</h3>
-                        <p class="item-description">Any Classic Burger, regular Fries & a selected Drink. Save big!</p>
-                        <p class="item-price">€11.00</p>
-                    </div>
-                    <a href="item-detail.html?item=burger-meal-deal" class="btn btn-primary btn-view-item">View Deal Details</a>
-                </div>
+                {/* JS will populate this */}
+            </div>
+        </section>
+        <section id="sides" class="menu-items-section container" aria-labelledby="sides-title">
+            <h2 id="sides-title">Sides & Extras</h2>
+            <div class="menu-grid">
+                {/* JS will populate this */}
+            </div>
+        </section>
+        <section id="drinks" class="menu-items-section container" aria-labelledby="drinks-title">
+            <h2 id="drinks-title">Drinks</h2>
+            <div class="menu-grid">
+                {/* JS will populate this */}
             </div>
         </section>
 
+        <section id="deals-section" class="menu-items-section container deals-highlight-section" aria-labelledby="deals-title">
+            <h2 id="deals-title">Our Best Meal Deals</h2>
+            <div class="menu-grid">
+                {/* JS will populate this */}
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer-bottom">
-        <div class="container footer-content"> {/* Added class for flex layout */}
+        <div class="container footer-content">
             <div class="footer-info">
                 <p>© <span id="currentYear"></span> Cork Grill Restaurant. All Rights Reserved.</p>
                 <p>20 Coburg St, Victorian Quarter, Cork, T23 DX52</p>
             </div>
-            <div class="footer-links">
+            <nav class="footer-links" aria-label="Footer navigation">
                 <a href="about.html">About Us</a> |
                 <a href="contact.html">Contact</a> |
                 <a href="#privacy">Privacy Policy (Demo)</a> |
                 <a href="#terms">Terms of Service (Demo)</a>
-            </div>
+            </nav>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top" aria-label="Scroll back to top of page">⇧</a>
+
+    <script src="js/script.js"></script>
 </body>
 </html>
+<!--basil-->
