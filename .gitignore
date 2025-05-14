@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+ehthumbs.db
+Thumbs.db
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.Spotlight-V100
+.Trashes
+
+# SASS cache
+.sass-cache/
+
+# Optional: Compiled CSS map if you don't want to track it
+# If you want to commit it, remove the line below or comment it out.
+# If you don't want to commit it, keep this line.
+css/style.css.map
+
+# Optional: IDE/Editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
