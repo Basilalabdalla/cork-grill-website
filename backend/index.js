@@ -2,9 +2,12 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const connectDB = require('./config/db');
 
 // Initialize dotenv to use environment variables
 dotenv.config();
+
+connectDB();
 
 // Initialize the express app
 const app = express();
