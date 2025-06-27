@@ -1,38 +1,62 @@
 import React, { createContext, useState, useContext } from 'react';
 
-// 1. Create the context
 const CartContext = createContext();
 
-// 2. Create a custom hook to use the context easily
 export const useCart = () => {
   return useContext(CartContext);
 };
 
-// 3. Create the Provider component
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
+  // This function is now just for adding the *first* instance of an item
   const addToCart = (item) => {
-    // Check if the item is already in the cart
     const exist = cartItems.find((x) => x._id === item._id);
-    if (exist) {
-      // If it exists, update its quantity
-      setCartItems(
-        cartItems.map((x) =>
-          x._id === item._id ? { ...exist, qty: exist.qty + 1 } : x
-        )
-      );
-    } else {
-      // If it's a new item, add it to the cart with quantity 1
+    if (!exist) {
       setCartItems([...cartItems, { ...item, qty: 1 }]);
+    } else {
+        // If it exists, just increase quantity
+        increaseQuantity(item._id);
     }
   };
 
-  // We'll add removeFromCart and other functions later
+  // --- NEW: INCREASE QUANTITY ---
+  const increaseQuantity = (itemId) => {
+    setCartItems(
+      cartItems.map((x) =>
+        x._id === itemId ? { ...x, qty: x.qty + 1 } : x
+      )
+    );
+  };
 
+  // --- NEW: DECREASE QUANTITY ---
+  const decreaseQuantity = (itemId) => {
+    const exist = cartItems.find((x) => x._id === itemId);
+    if (exist.qty === 1) {
+      // If quantity is 1, remove the item completely
+      removeFromCart(itemId);
+    } else {
+      setCartItems(
+        cartItems.map((x) =>
+          x._id === itemId ? { ...x, qty: x.qty - 1 } : x
+        )
+      );
+    }
+  };
+
+  // --- NEW: REMOVE ITEM FROM CART ---
+  const removeFromCart = (itemId) => {
+    setCartItems(cartItems.filter((x) => x._id !== itemId));
+  };
+
+
+  // Provide all functions to the rest of the app
   const value = {
     cartItems,
     addToCart,
+    increaseQuantity,
+    decreaseQuantity,
+    removeFromCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
