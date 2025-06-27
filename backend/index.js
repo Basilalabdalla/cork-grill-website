@@ -3,6 +3,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const menuRoutes = require('./routes/menuRoutes');
 
 // Initialize dotenv to use environment variables
 dotenv.config();
@@ -22,6 +23,9 @@ app.use(express.json());
 app.get('/api', (req, res) => {
   res.send('Cork Grill API is running...');
 });
+
+// Use the menu routes
+app.use('/api/menu', menuRoutes);
 
 // Define the port from the .env file, with a fallback
 const PORT = process.env.PORT || 5001;
