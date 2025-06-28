@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext'; // To get the token
 import { useNavigate } from 'react-router-dom'; // Import for logout redirect
+import AddItemForm from '../components/AddItemForm';
 
 const AdminDashboardPage = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -8,6 +9,12 @@ const AdminDashboardPage = () => {
   const [error, setError] = useState('');
   const { adminInfo, logout } = useAuth(); // Get admin info and logout function
   const navigate = useNavigate();
+
+   // This function will be passed as a prop to the AddItemForm
+  const handleNewItem = (newItem) => {
+    // Add the newly created item to our list to update the UI instantly
+    setMenuItems((prevItems) => [...prevItems, newItem]);
+  };
 
   // Function to fetch menu items
   const fetchMenuItems = async () => {
@@ -85,6 +92,8 @@ const AdminDashboardPage = () => {
           Logout
         </button>
       </div>
+
+      <AddItemForm onNewItem={handleNewItem} />
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Manage Menu</h2>
