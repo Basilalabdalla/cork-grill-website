@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { getMenuItems } = require('../controllers/menuController');
+const { 
+    getMenuItems, 
+    createMenuItem, 
+    updateMenuItem, 
+    deleteMenuItem 
+} = require('../controllers/menuController');
+const { protect } = require('../middleware/authMiddleware'); // <-- IMPORT protect
 
-// When a GET request is made to the root of this route ('/'),
-// it will be handled by the getMenuItems controller function.
+// --- Public Route ---
+// Anyone can view the menu
 router.get('/', getMenuItems);
+
+// --- Protected Admin Routes ---
+// Only a logged-in admin can create, update, or delete items.
+router.post('/', protect, createMenuItem);
+router.put('/:id', protect, updateMenuItem);
+router.delete('/:id', protect, deleteMenuItem);
 
 module.exports = router;
