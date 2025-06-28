@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "data:import": "node seeder.js",
+    "data:destroy": "node seeder.js -d"
   },
   "keywords": [],
   "author": "",
@@ -12,10 +14,11 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^17.0.0",
+    "dotenv": "^16.6.0",
     "express": "^5.1.0",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.16.1",
-    "square": "^36.0.0"
+    "square": "^43.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

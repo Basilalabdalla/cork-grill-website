@@ -14,6 +14,34 @@ const Cart = () => {
   
   const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
+   // --- NEW: CHECKOUT HANDLER ---
+  const handleCheckout = async () => {
+    console.log('Starting checkout for items:', cartItems);
+    try {
+      const response = await fetch('http://localhost:5002/api/orders/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cartItems }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create order');
+      }
+
+      const order = await response.json();
+      console.log('Successfully created Square order:', order);
+      alert(`Order created successfully! Square Order ID: ${order.id}`);
+      // In the next step, we will redirect to the Square payment screen here.
+
+    } catch (error) {
+      console.error('Checkout Error:', error);
+      alert(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className="bg-white shadow-2xl rounded-2xl p-6 w-full max-w-sm">
       <h2 className="text-2xl font-bold mb-6 border-b pb-4">Your Order</h2>
@@ -43,7 +71,7 @@ const Cart = () => {
             <span>Total</span>
             <span>€{total.toFixed(2)}</span>
           </div>
-          <button className="w-full bg-green-600 text-white font-bold py-3 rounded-lg mt-6 hover:bg-green-700 transition-colors">
+          <button onClick={handleCheckout} className="w-full bg-green-600 text-white font-bold py-3 rounded-lg mt-6 hover:bg-green-700 transition-colors">
             Checkout
           </button>
         </div>
