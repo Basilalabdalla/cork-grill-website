@@ -9,14 +9,17 @@ const TrashIcon = () => (
   );
 
 const Cart = () => {
-  // Get all our new functions from the context
   const { cartItems, increaseQuantity, decreaseQuantity, removeFromCart } = useCart();
   
   const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
-   // --- NEW: CHECKOUT HANDLER ---
+  // This function now expects a 'paymentUrl' from the backend and redirects to it.
   const handleCheckout = async () => {
-    console.log('Starting checkout for items:', cartItems);
+    if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
     try {
       const response = await fetch('http://localhost:5002/api/orders/create', {
         method: 'POST',
@@ -28,13 +31,18 @@ const Cart = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create order');
+        throw new Error(errorData.message || 'Failed to create payment link');
       }
 
-      const order = await response.json();
-      console.log('Successfully created Square order:', order);
-      alert(`Order created successfully! Square Order ID: ${order.id}`);
-      // In the next step, we will redirect to the Square payment screen here.
+      // The backend now sends an object like: { paymentUrl: 'https://...' }
+      const { paymentUrl } = await response.json();
+
+      // --- NEW LOGIC: Redirect the user to the Square Checkout page ---
+      if (paymentUrl) {
+        window.location.href = paymentUrl;
+      } else {
+        throw new Error('Could not retrieve payment URL.');
+      }
 
     } catch (error) {
       console.error('Checkout Error:', error);
@@ -56,7 +64,6 @@ const Cart = () => {
                 <p className="text-sm text-gray-600">€{item.price.toFixed(2)}</p>
               </div>
               <div className="flex items-center gap-2">
-                 {/* --- INTERACTION BUTTONS --- */}
                 <button onClick={() => decreaseQuantity(item._id)} className="bg-gray-200 text-gray-800 rounded-full w-6 h-6 font-bold">-</button>
                 <span>{item.qty}</span>
                 <button onClick={() => increaseQuantity(item._id)} className="bg-gray-200 text-gray-800 rounded-full w-6 h-6 font-bold">+</button>
@@ -71,7 +78,10 @@ const Cart = () => {
             <span>Total</span>
             <span>€{total.toFixed(2)}</span>
           </div>
-          <button onClick={handleCheckout} className="w-full bg-green-600 text-white font-bold py-3 rounded-lg mt-6 hover:bg-green-700 transition-colors">
+          <button 
+            onClick={handleCheckout} 
+            className="w-full bg-green-600 text-white font-bold py-3 rounded-lg mt-6 hover:bg-green-700 transition-colors"
+          >
             Checkout
           </button>
         </div>

@@ -7,39 +7,49 @@ const squareClient = new Client({
 });
 
 const createOrder = async (req, res) => {
-  const { cartItems } = req.body;
-
   try {
-    const lineItems = cartItems.map(item => ({
-      name: item.name,
-      quantity: item.qty.toString(),
-      basePriceMoney: {
-        amount: Math.round(item.price * 100), // Convert to cents
-        currency: 'EUR',
-      },
-    }));
+    // --- Step 1: Define the Order object ---
+    // We create the order payload once and reuse it.
+    const orderPayload = {
+      locationId: process.env.SQUARE_LOCATION_ID,
+      lineItems: req.body.cartItems.map(item => ({
+        name: item.name,
+        quantity: item.qty.toString(),
+        basePriceMoney: {
+          amount: Math.round(item.price * 100),
+          currency: 'EUR',
+        },
+      })),
+    };
 
-    const response = await squareClient.ordersApi.createOrder({
+    // --- Step 2: Create the Order ---
+    const orderResponse = await squareClient.ordersApi.createOrder({
       idempotencyKey: randomUUID(),
-      order: {
-        locationId: process.env.SQUARE_LOCATION_ID,
-        lineItems: lineItems,
-      },
+      order: orderPayload, // Use the payload here
     });
 
-    // ✅ Convert BigInt to string to avoid JSON error
-    const safeOrder = JSON.parse(
-      JSON.stringify(response.result.order, (_, value) =>
-        typeof value === 'bigint' ? value.toString() : value
-      )
-    );
+    const orderId = orderResponse.result.order.id;
 
-    res.status(201).json(safeOrder);
+    // --- Step 3: Create a Payment Link for that Order ---
+    const paymentLinkResponse = await squareClient.checkoutApi.createPaymentLink({
+      idempotencyKey: randomUUID(),
+      // The 'order' object for the payment link requires the full order details.
+      // We also add the order_id here to link it to the previously created order.
+      order: {
+        ...orderPayload, // <-- THE FIX: Reuse the original order payload
+        order_id: orderId, // Link to the created order
+      }
+    });
+    
+    // --- Step 4: Send the URL back to the Frontend ---
+    const paymentUrl = paymentLinkResponse.result.paymentLink.url;
+    res.status(201).json({ paymentUrl });
 
   } catch (error) {
+    // This detailed error log was extremely helpful.
     console.error('CRITICAL SQUARE ERROR:', error);
     res.status(500).json({ 
-      message: 'Failed to create Square order.',
+      message: 'Failed to create Square order or payment link.',
       error: error.message,
     });
   }
