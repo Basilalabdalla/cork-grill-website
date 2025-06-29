@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext'; // To get the token
 import { useNavigate } from 'react-router-dom'; // Import for logout redirect
 import AddItemForm from '../components/AddItemForm';
+import EditItemModal from '../components/EditItemModal';
 
 const AdminDashboardPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [editingItem, setEditingItem] = useState(null);
   const { adminInfo, logout } = useAuth(); // Get admin info and logout function
   const navigate = useNavigate();
 
@@ -75,52 +77,65 @@ const AdminDashboardPage = () => {
     // For now, this just clears the auth state.
   };
 
+  const handleUpdateItem = (updatedItem) => {
+    setMenuItems((prevItems) => 
+      prevItems.map((item) => (item._id === updatedItem._id ? updatedItem : item))
+    );
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-gray-600">Welcome, {adminInfo?.username}!</p>
+    <>
+      <div className="container mx-auto p-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <p className="text-gray-600">Welcome, {adminInfo?.username}!</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700"
+          >
+            Logout
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700"
-        >
-          Logout
-        </button>
-      </div>
 
-      <AddItemForm onNewItem={handleNewItem} />
+        <AddItemForm onNewItem={handleNewItem} />
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Manage Menu</h2>
-        {/* Table to display menu items */}
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {menuItems.map((item) => (
-              <tr key={item._id}>
-                <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">€{item.price.toFixed(2)}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
-                  <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900">Delete</button>
-                </td>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">Manage Menu</h2>
+          {/* Table to display menu items */}
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {menuItems.map((item) => (
+                <tr key={item._id}>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">€{item.price.toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onClick={() => setEditingItem(item)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
+                    <button onClick={() => handleDelete(item._id)} className="text-red-600 hover:text-red-900">Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+      <EditItemModal 
+          item={editingItem} 
+          onClose={() => setEditingItem(null)} // Function to close the modal
+          onUpdate={handleUpdateItem} // Function to handle the updated data
+        />
+    </>
   );
 };
 
