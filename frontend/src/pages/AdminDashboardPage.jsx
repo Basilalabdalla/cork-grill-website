@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'; // To get the token
 import { useNavigate } from 'react-router-dom'; // Import for logout redirect
 import AddItemForm from '../components/AddItemForm';
 import EditItemModal from '../components/EditItemModal';
+import PromotionManager from '../components/PromotionManager';
 
 const AdminDashboardPage = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -103,6 +104,7 @@ const AdminDashboardPage = () => {
         </div>
 
         <AddItemForm onNewItem={handleNewItem} />
+        <PromotionManager />
 
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4">Manage Menu</h2>

@@ -9,9 +9,16 @@ const TrashIcon = () => (
   );
 
 const Cart = () => {
-  const { cartItems, increaseQuantity, decreaseQuantity, removeFromCart } = useCart();
-  
-  const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const { 
+    cartItems, 
+    increaseQuantity, 
+    decreaseQuantity, 
+    removeFromCart, 
+    subtotal, 
+    discountAmount, 
+    bestPromotion, 
+    total 
+  } = useCart();
 
   // This function now expects a 'paymentUrl' from the backend and redirects to it.
   const handleCheckout = async () => {
@@ -74,10 +81,23 @@ const Cart = () => {
             </div>
           ))}
           <hr className="my-4" />
-          <div className="flex justify-between font-bold text-xl mt-6">
-            <span>Total</span>
-            <span>€{total.toFixed(2)}</span>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>€{subtotal.toFixed(2)}</span>
+            </div>
+            {bestPromotion && (
+              <div className="flex justify-between text-green-600">
+                <span>Discount ({bestPromotion.name})</span>
+                <span>-€{discountAmount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between font-bold text-xl pt-2 border-t">
+              <span>Total</span>
+              <span>€{total.toFixed(2)}</span>
+            </div>
           </div>
+          
           <button 
             onClick={handleCheckout} 
             className="w-full bg-green-600 text-white font-bold py-3 rounded-lg mt-6 hover:bg-green-700 transition-colors"

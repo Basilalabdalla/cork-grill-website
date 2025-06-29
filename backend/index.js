@@ -4,18 +4,35 @@ dotenv.config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+
+// --- Import all routes first ---
 const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const promotionRoutes = require('./routes/promotionRoutes');
 
+// --- Connect to DB and initialize app ---
 connectDB();
 const app = express();
-app.use(cors());
-app.use(express.json());
 
+// --- Set up ALL middleware BEFORE routes ---
+app.use(cors());
+app.use(express.json()); // This MUST come before the routes are defined
+
+// --- Define a basic test route (optional) ---
+app.get('/api', (req, res) => {
+  res.send('Cork Grill API is running...');
+});
+
+// --- Define all API routes LAST ---
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/promotions', promotionRoutes);
+
 
 const PORT = process.env.PORT || 5002;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
