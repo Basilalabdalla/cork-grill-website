@@ -26,15 +26,15 @@ const whitelist = [
 ];
 
 const corsOptions = {
-    origin: function (origin, callback) {
-        // The 'origin' is the URL of the site making the request (e.g., your Vercel URL)
-        // We check if the incoming origin is in our whitelist OR if it's a Vercel preview URL
-        if (whitelist.indexOf(origin) !== -1 || (origin && origin.endsWith('.vercel.app')) || !origin) {
-            callback(null, true); // Allow the request
-        } else {
-            callback(new Error('Not allowed by CORS')); // Block the request
-        }
-    }
+    origin: [
+        'http://localhost:5173', // For local development
+        // This Regular Expression will match:
+        // 1. https://cork-grill-website.vercel.app
+        // 2. https://cork-grill-website-git-main...vercel.app
+        // 3. Any other Vercel preview URL for this project.
+        /^https:\/\/cork-grill-website.*\.vercel\.app$/ 
+    ],
+    credentials: true, // This can be helpful for future features
 };
 
 app.use(cors(corsOptions));
