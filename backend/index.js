@@ -23,7 +23,7 @@ app.use(express.json()); // This MUST come before the routes are defined
 const corsOptions = {
   // We will add your live frontend URL here once it's deployed.
   // For now, we just allow our development frontend.
-  origin: ['https://cork-grill-website.vercel.app','http://localhost:5173'], 
+  origin: ['https://cork-grill-website-7qh2l0q0-basels-projects-82fec66b.vercel.app','http://localhost:5173'], 
 };
 
 app.use(cors(corsOptions));
