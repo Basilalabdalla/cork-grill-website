@@ -22,7 +22,16 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
     // We upload the file buffer to Cloudinary.
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: 'cork-grill' }, // Optional: saves uploads to a specific folder
+        { 
+    folder: 'cork-grill',
+    // --- NEW: Add this transformation ---
+    transformation: [
+      // This will resize the image to be a maximum of 1200px wide,
+      // keeping the aspect ratio, and will set the quality to auto.
+      // This drastically reduces the file size of large images.
+      { width: 1200, crop: 'limit', quality: 'auto' }
+    ]
+  }, 
         (error, result) => {
           if (error) reject(error);
           else resolve(result);

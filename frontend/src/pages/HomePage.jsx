@@ -11,7 +11,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch('http://localhost:5002/api/menu');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/menu`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

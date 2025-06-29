@@ -56,7 +56,7 @@ const EditItemModal = ({ item, onClose, onUpdate }) => {
         const uploadFormData = new FormData();
         uploadFormData.append('image', imageFile);
 
-        const uploadRes = await fetch('http://localhost:5002/api/upload', {
+        const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/api/upload`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${adminInfo.token}` },
           body: uploadFormData,
@@ -76,7 +76,7 @@ const EditItemModal = ({ item, onClose, onUpdate }) => {
       // This will use either the original imageUrl or the newly uploaded one.
       const finalDataToUpdate = { ...formData, imageUrl: finalImageUrl };
 
-      const updateRes = await fetch(`http://localhost:5002/api/menu/${item._id}`, {
+      const updateRes = await fetch(`${import.meta.env.VITE_API_URL}/api/menu/${item._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

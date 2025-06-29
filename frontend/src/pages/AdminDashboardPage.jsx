@@ -23,7 +23,7 @@ const AdminDashboardPage = () => {
   const fetchMenuItems = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5002/api/menu');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/menu`);
       if (!response.ok) {
         throw new Error('Failed to fetch menu items');
       }
@@ -49,7 +49,7 @@ const AdminDashboardPage = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5002/api/menu/${itemId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/menu/${itemId}`, {
         method: 'DELETE',
         headers: {
           // This is the crucial part: sending the token for authorization

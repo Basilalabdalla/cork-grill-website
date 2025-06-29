@@ -20,6 +20,13 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // This MUST come before the routes are defined
 
+const corsOptions = {
+  // We will add your live frontend URL here once it's deployed.
+  // For now, we just allow our development frontend.
+  origin: ['http://localhost:5173'], 
+};
+
+app.use(cors(corsOptions));
 // --- Define a basic test route (optional) ---
 app.get('/api', (req, res) => {
   res.send('Cork Grill API is running...');
