@@ -37,7 +37,7 @@ const HomePage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 lg:w-3/4">
             {menuItems.map((item) => (
               <div key={item._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
-                <img src={`https://picsum.photos/seed/${item._id}/600/400`} alt={item.name} className="w-full h-48 object-cover" />
+                <img src={item.imageUrl} alt={item.name} className="w-full h-48 object-cover" />
                 <div className="p-6 flex flex-col flex-grow">
                   <h2 className="text-2xl font-bold mb-2 text-gray-900">{item.name}</h2>
                   <p className="text-gray-600 mb-4 flex-grow">{item.description}</p>

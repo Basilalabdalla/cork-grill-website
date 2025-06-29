@@ -10,6 +10,7 @@ const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const promotionRoutes = require('./routes/promotionRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // --- Connect to DB and initialize app ---
 connectDB();
@@ -29,6 +30,7 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/promotions', promotionRoutes);
+app.use('/api/upload', uploadRoutes);
 
 
 const PORT = process.env.PORT || 5002;
