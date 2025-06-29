@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// --- Import all routes first ---
+// --- Import all routes ---
 const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -17,20 +17,29 @@ connectDB();
 const app = express();
 
 // --- Set up ALL middleware BEFORE routes ---
-app.use(cors());
-app.use(express.json()); // This MUST come before the routes are defined
+app.use(express.json());
+
+// --- NEW, MORE ROBUST CORS CONFIGURATION ---
+const whitelist = [
+    'http://localhost:5173', // For local development
+    'https://cork-grill-website.vercel.app' // Your main production domain
+];
 
 const corsOptions = {
-  // We will add your live frontend URL here once it's deployed.
-  // For now, we just allow our development frontend.
-  origin: ['https://cork-grill-website-7qh2l0q0-basels-projects-82fec66b.vercel.app','http://localhost:5173'], 
+    origin: function (origin, callback) {
+        // The 'origin' is the URL of the site making the request (e.g., your Vercel URL)
+        // We check if the incoming origin is in our whitelist OR if it's a Vercel preview URL
+        if (whitelist.indexOf(origin) !== -1 || (origin && origin.endsWith('.vercel.app')) || !origin) {
+            callback(null, true); // Allow the request
+        } else {
+            callback(new Error('Not allowed by CORS')); // Block the request
+        }
+    }
 };
 
 app.use(cors(corsOptions));
-// --- Define a basic test route (optional) ---
-app.get('/api', (req, res) => {
-  res.send('Cork Grill API is running...');
-});
+// --- END OF NEW CORS CONFIGURATION ---
+
 
 // --- Define all API routes LAST ---
 app.use('/api/menu', menuRoutes);
