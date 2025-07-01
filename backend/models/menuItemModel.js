@@ -13,6 +13,11 @@ const menuItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+      default: 'Uncategorized' // A sensible default
+    },
     price: {
       type: Number,
       required: true,

@@ -1,108 +1,108 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-// Create the context, which will be the 'vessel' for our global state.
 const CartContext = createContext();
 
-// Create a custom hook for easy access to the context from any component.
 export const useCart = () => {
   return useContext(CartContext);
 };
 
-// Create the Provider component. This component will wrap our application
-// and manage all the state and logic for the cart and promotions.
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [promotions, setPromotions] = useState([]); // State to hold active promotions
+  const [promotions, setPromotions] = useState([]);
+  const [cartKey, setCartKey] = useState(0); // This is our animation trigger
 
-  // --- EFFECT TO FETCH PROMOTIONS ---
-  // This runs once when the application loads to get all available promotions.
   useEffect(() => {
     const fetchPromotions = async () => {
       try {
-        const response = await fetch('http://localhost:5002/api/promotions');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/promotions`);
         if (response.ok) {
           const data = await response.json();
           setPromotions(data);
-        } else {
-          console.error('Failed to fetch promotions from server.');
         }
       } catch (error) {
-        console.error("Error fetching promotions:", error);
+        console.error("Failed to fetch promotions:", error);
       }
     };
     fetchPromotions();
-  }, []); // The empty dependency array means this effect runs only once on mount.
+  }, []);
 
-  // --- CORE CART FUNCTIONS ---
+  const updateCartAndAnimate = (newCartItems) => {
+    setCartItems(newCartItems);
+    setCartKey(prevKey => prevKey + 1); // Trigger animation
+  };
 
   const addToCart = (item) => {
     const exist = cartItems.find((x) => x._id === item._id);
+    let newCartItems;
     if (exist) {
-      increaseQuantity(item._id);
+      newCartItems = cartItems.map((x) =>
+        x._id === item._id ? { ...exist, qty: exist.qty + 1 } : x
+      );
     } else {
-      setCartItems([...cartItems, { ...item, qty: 1 }]);
+      newCartItems = [...cartItems, { ...item, qty: 1 }];
     }
+    updateCartAndAnimate(newCartItems);
   };
 
   const increaseQuantity = (itemId) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item._id === itemId ? { ...item, qty: item.qty + 1 } : item
-      )
+    const newCartItems = cartItems.map((x) =>
+      x._id === itemId ? { ...x, qty: x.qty + 1 } : x
     );
+    updateCartAndAnimate(newCartItems);
   };
 
   const decreaseQuantity = (itemId) => {
     const exist = cartItems.find((x) => x._id === itemId);
-    if (exist && exist.qty === 1) {
-      removeFromCart(itemId);
+    let newCartItems;
+    if (exist.qty === 1) {
+      newCartItems = cartItems.filter((x) => x._id !== itemId);
     } else {
-      setCartItems(
-        cartItems.map((item) =>
-          item._id === itemId ? { ...item, qty: item.qty - 1 } : item
-        )
+      newCartItems = cartItems.map((x) =>
+        x._id === itemId ? { ...x, qty: x.qty - 1 } : x
       );
     }
+    updateCartAndAnimate(newCartItems);
   };
 
   const removeFromCart = (itemId) => {
-    setCartItems(cartItems.filter((item) => item._id !== itemId));
+    const newCartItems = cartItems.filter((x) => x._id !== itemId);
+    updateCartAndAnimate(newCartItems);
   };
 
-
-  // --- DYNAMIC CALCULATIONS ---
-  // These values are re-calculated every time the cartItems or promotions change.
-  
-  // 1. Calculate the base subtotal
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-
-  // 2. Determine the best active promotion
   const now = new Date();
-  const activePromotions = promotions.filter(p => 
-    new Date(p.startTime) <= now && new Date(p.endTime) >= now && p.isActive
-  );
+  const activePromotions = promotions.filter(p => new Date(p.startTime) <= now && new Date(p.endTime) >= now);
   
   let bestPromotion = null;
   if (activePromotions.length > 0) {
-    // This logic finds the promotion with the highest discount percentage.
-    // It can be expanded later to handle different types of promotions.
-    bestPromotion = activePromotions.reduce(
-      (best, current) => (current.discountValue > best.discountValue ? current : best),
+    bestPromotion = activePromotions.reduce((best, current) => 
+      current.discountValue > best.discountValue ? current : best, 
       activePromotions[0]
     );
   }
 
-  // 3. Calculate the discount amount
-  let discountAmount = 0;
-  if (bestPromotion) {
-    discountAmount = (subtotal * bestPromotion.discountValue) / 100;
-  }
-
-  // 4. Calculate the final total
+  const discountAmount = bestPromotion ? (subtotal * bestPromotion.discountValue) / 100 : 0;
   const total = subtotal - discountAmount;
 
-  // --- VALUE TO PROVIDE ---
-  // This object bundles up all the state and functions to be provided to child components.
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cartItems }),
+      });
+      if (!response.ok) throw new Error('Failed to create payment link');
+      const { paymentUrl } = await response.json();
+      if (paymentUrl) window.location.href = paymentUrl;
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  };
+
   const value = {
     cartItems,
     addToCart,
@@ -113,6 +113,8 @@ export const CartProvider = ({ children }) => {
     discountAmount,
     bestPromotion,
     total,
+    handleCheckout,
+    cartKey, // Ensure cartKey is provided
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
