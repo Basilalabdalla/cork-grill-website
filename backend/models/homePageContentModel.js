@@ -18,9 +18,13 @@ const homePageContentSchema = new mongoose.Schema({
   openingHours: {
     weekdays: { type: String, default: '11:00 AM - 9:00 PM' },
     weekends: { type: String, default: '11:00 AM - 10:00 PM' },
-  }
+  },
+
+isStoreOpen: {
+    type: Boolean,
+    default: true, // Default to being open
+  },
 }, { timestamps: true });
 
 const HomePageContent = mongoose.model('HomePageContent', homePageContentSchema);
-
 module.exports = HomePageContent;

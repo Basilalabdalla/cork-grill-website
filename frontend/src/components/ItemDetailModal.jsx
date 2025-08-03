@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ItemDetailModal = ({ item, onClose }) => {
+const ItemDetailModal = ({ item, onClose, isStoreOpen }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState({}); // To store user's choices
@@ -108,9 +108,13 @@ const ItemDetailModal = ({ item, onClose }) => {
                 <span className="text-2xl font-bold">{quantity}</span>
                 <button onClick={() => setQuantity(q => q + 1)} className="text-2xl font-bold bg-gray-200 rounded-full w-10 h-10">+</button>
               </div>
-              <button onClick={handleAddToCart} className="w-full bg-orange-500 text-white font-bold py-4 rounded-lg text-lg">
-                Add {quantity} to order for €{totalPrice.toFixed(2)}
-              </button>
+              <button 
+    onClick={handleAddToCart} 
+    disabled={!isStoreOpen}
+    className="w-full bg-orange-500 text-white font-bold py-4 rounded-lg text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+  >
+    {isStoreOpen ? `Add ${quantity} to order for €${totalPrice.toFixed(2)}` : 'Currently unavailable'}
+  </button>
             </footer>
           </motion.div>
         </motion.div>

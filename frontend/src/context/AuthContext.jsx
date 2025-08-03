@@ -1,5 +1,17 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
+const refreshAdminInfo = async (token) => {
+    // This is a placeholder for a future /api/admin/me endpoint.
+    // For now, we will decode the token to get the 2FA status.
+    // A better solution would be to fetch the user profile from the backend.
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/user/${payload.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const updatedAdmin = await userRes.json();
+    login(updatedAdmin);
+};
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -38,7 +50,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Provide the new loading state along with the other values
-  const value = { adminInfo, loading, login, logout }; // <-- NEW: Add loading to value
-
+  const value = { adminInfo, login, logout, refreshAdminInfo }; 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

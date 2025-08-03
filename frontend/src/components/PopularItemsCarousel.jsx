@@ -1,11 +1,11 @@
 import React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 
-const PopularItemCard = ({ item, onSelect }) => (
+const PopularItemCard = ({ item, onSelect, isStoreOpen }) => (
     <div className="p-2 h-full">
         <div 
-            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer h-full flex flex-col hover:shadow-xl transition-shadow duration-300"
-            onClick={() => onSelect(item)}
+            onClick={isStoreOpen ? () => onSelect(item) : undefined}
+            className={`bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-shadow duration-300 ${isStoreOpen ? 'cursor-pointer hover:shadow-xl' : 'opacity-75'}`}
         >
             <img src={item.imageUrl} alt={item.name} className="w-full h-32 object-cover" />
             <div className="p-4 flex-grow flex flex-col">
@@ -16,7 +16,7 @@ const PopularItemCard = ({ item, onSelect }) => (
     </div>
 );
 
-const PopularItemsCarousel = ({ items, onSelectItem }) => {
+const PopularItemsCarousel = ({ items, onSelectItem, isStoreOpen }) => {
   const [emblaRef] = useEmblaCarousel({ loop: false, align: 'start' });
   if (!items || items.length === 0) return null;
 
@@ -27,7 +27,7 @@ const PopularItemsCarousel = ({ items, onSelectItem }) => {
         <div className="embla__container">
           {items.map(item => (
             <div className="embla__slide" style={{ flex: '0 0 50%', minWidth: 0 }} key={item._id}>
-                 <PopularItemCard item={item} onSelect={onSelectItem} />
+                 <PopularItemCard item={item} onSelect={onSelectItem} isStoreOpen={isStoreOpen}/>
             </div>
           ))}
         </div>

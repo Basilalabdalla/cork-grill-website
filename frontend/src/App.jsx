@@ -17,6 +17,7 @@ import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
 import AdminMenuPage from './pages/AdminMenuPage.jsx';
 import AdminPromotionsPage from './pages/AdminPromotionsPage.jsx';
 import AdminSiteSettingsPage from './pages/AdminSiteSettingsPage.jsx';
+import TwoFactorAuthPage from './pages/TwoFactorAuthPage.jsx';
 
 const PublicLayout = () => (
   <CartProvider>
@@ -36,6 +37,7 @@ function App() {
             </Route>
             
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/admin/verify-2fa" element={<TwoFactorAuthPage />} />
 
             {/* --- CORRECTED ADMIN ROUTE STRUCTURE --- */}
             <Route element={<ProtectedRoute />}>

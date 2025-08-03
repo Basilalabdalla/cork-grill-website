@@ -4,6 +4,10 @@ const bcrypt = require('bcryptjs');
 const adminUserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+
+  twoFactorSecret: { type: String }, // The secret key for the authenticator app
+  twoFactorEnabled: { type: Boolean, default: false }, // Is 2FA active for this user?
+  twoFactorAuthUrl: { type: String }, // The 'otpauth://' URL for the QR code
 });
 
 // This function runs before saving a user to hash the password

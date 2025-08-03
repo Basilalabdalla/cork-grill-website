@@ -11,30 +11,33 @@ const LoginPage = () => {
   const { login } = useAuth(); // <-- Get the login function from our context
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-    setError('');
+        e.preventDefault();
+        setError('');
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-      }
-
-      // --- THIS IS THE NEW LOGIC ---
-      login(data); // 1. Save user info to context and localStorage
-      navigate('/admin/dashboard'); // 2. Redirect to the admin dashboard
-      
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+          if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong');
+          }
+          
+      if (data.twoFactorRequired) {
+  // If 2FA is required, redirect to the verification page
+  navigate('/admin/verify-2fa', { state: { userId: data._id } });
+} else {
+  // If not required, log them in directly.
+  login(data);
+  navigate('/admin/dashboard');
+}
+          
+        } catch (err) {
+          setError(err.message);
+        }
+      };
 
   // The JSX form is the same as before, no changes needed there.
   return (

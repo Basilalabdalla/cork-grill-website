@@ -89,12 +89,20 @@ const HomePage = () => {
   if (loading) return <div className="p-4 text-center text-xl">Loading menu...</div>;
   if (error) return <div className="p-4 text-center text-red-500">Error: {error}</div>;
 
+  const isStoreOpen = homeContent?.isStoreOpen ?? true;
+
   return (
     <div className="bg-gray-50">
       <header className="text-center py-6 md:py-10 bg-white border-b">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Cork Grill</h1>
         <p className="text-md md:text-lg text-gray-500 mt-2">American - Burgers - Mediterranean</p>
       </header>
+
+      {!isStoreOpen && (
+        <div className="bg-red-600 text-white font-bold text-center py-3">
+          <p>This place is currently closed. Check back during business hours to place an order.</p>
+        </div>
+      )}
 
       <PromotionsCarousel />
       <LunchDealBanner />
@@ -106,7 +114,7 @@ const HomePage = () => {
 
       <div className="container mx-auto p-4 sm:p-8">
         <OpeningHours hours={homeContent?.openingHours} />
-        <PopularItemsCarousel items={homeContent?.popularItemIds} onSelectItem={setSelectedItem} />
+        <PopularItemsCarousel items={homeContent?.popularItemIds} onSelectItem={setSelectedItem} isStoreOpen={isStoreOpen}/>
 
         <div className="flex flex-col lg:flex-row gap-8">
           <main className="lg:w-3/4 space-y-12 pb-24">
@@ -122,7 +130,13 @@ const HomePage = () => {
                         <p className="text-gray-600 mb-4 flex-grow text-sm">{item.description}</p>
                         <div className="flex justify-between items-center mt-4">
                           <p className="text-xl font-bold text-green-600">€{item.price.toFixed(2)}</p>
-                          <button onClick={() => setSelectedItem(item)} className="bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors duration-300">Add</button>
+                          <button 
+                            onClick={() => setSelectedItem(item)} 
+                            disabled={!isStoreOpen} // Disable the button
+                            className="bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                          >
+                            Add
+                          </button>
                         </div>
                       </div>
                     </motion.div>
@@ -139,7 +153,7 @@ const HomePage = () => {
       
       <div className="lg:hidden"><Cart /></div>
       <BackToTopButton />
-      <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+      <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} isStoreOpen={isStoreOpen}/>
     </div>
   );
 };

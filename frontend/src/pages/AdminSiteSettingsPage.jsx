@@ -1,5 +1,53 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
+import TwoFactorSetup from '../components/admin/TwoFactorSetup.jsx';
+
+const ChangePassword = () => {
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const { adminInfo } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setMessage('');
+        if (newPassword !== confirmPassword) {
+            return setError("New passwords do not match.");
+        }
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/change-password`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminInfo.token}` },
+                body: JSON.stringify({ oldPassword, newPassword })
+            });
+            const data = await res.json();
+            if(!res.ok) throw new Error(data.message || 'Failed to change password');
+            setMessage(data.message);
+            setOldPassword(''); setNewPassword(''); setConfirmPassword('');
+        } catch(err) {
+            setError(err.message);
+        }
+    }
+
+    return (
+        <div className="bg-white p-6 rounded-lg shadow-md mt-8">
+            <h2 className="text-2xl font-bold mb-4">Change Password</h2>
+            <form onSubmit={handleSubmit}>
+                {error && <p className="text-red-500 mb-2">{error}</p>}
+                {message && <p className="text-green-500 mb-2">{message}</p>}
+                <div className="space-y-4">
+                    <input type="password" placeholder="Old Password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} required className="p-2 border rounded w-full"/>
+                    <input type="password" placeholder="New Password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required className="p-2 border rounded w-full"/>
+                    <input type="password" placeholder="Confirm New Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required className="p-2 border rounded w-full"/>
+                </div>
+                <button type="submit" className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">Change Password</button>
+            </form>
+        </div>
+    );
+}
 
 const AdminSiteSettingsPage = () => {
   const [openingHours, setOpeningHours] = useState({ weekdays: '', weekends: '' });
@@ -8,6 +56,7 @@ const AdminSiteSettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { adminInfo } = useAuth();
+  const [isStoreOpen, setIsStoreOpen] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,9 +72,9 @@ const AdminSiteSettingsPage = () => {
         const menuItemsData = await menuItemsRes.json();
 
         setOpeningHours(homeContentData.openingHours || { weekdays: '', weekends: '' });
-        // Make sure we only store the IDs of the populated items
         setPopularItemIds(homeContentData.popularItemIds.map(item => item._id) || []);
         setAllItems(menuItemsData);
+        setIsStoreOpen(homeContentData.isStoreOpen ?? true); 
       } catch (err) {
         setError(err.message);
       } finally {
@@ -43,16 +92,14 @@ const AdminSiteSettingsPage = () => {
 
   const handleSave = async () => {
     try {
+      // --- NEW: Add 'isStoreOpen' to the data being saved ---
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/homepage`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${adminInfo.token}`,
-        },
-        body: JSON.stringify({ openingHours, popularItemIds }),
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminInfo.token}` },
+        body: JSON.stringify({ openingHours, popularItemIds, isStoreOpen }),
       });
       if (!response.ok) throw new Error('Failed to save settings.');
-      alert('Site settings saved successfully!');
+      alert('Settings saved successfully!');
     } catch (err) {
       alert(`Error: ${err.message}`);
     }
@@ -64,6 +111,22 @@ const AdminSiteSettingsPage = () => {
     <div>
       <h1 className="text-3xl font-bold mb-8">Site Settings</h1>
       {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-6">{error}</p>}
+
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-2xl font-bold mb-4">Operational Status</h2>
+        <div className="flex items-center gap-4">
+          <p className={`font-bold text-lg ${isStoreOpen ? 'text-green-600' : 'text-red-600'}`}>
+            {isStoreOpen ? 'Store is currently OPEN' : 'Store is currently CLOSED'}
+          </p>
+          <button
+            onClick={() => setIsStoreOpen(!isStoreOpen)}
+            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${isStoreOpen ? 'bg-green-500' : 'bg-gray-300'}`}
+          >
+            <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${isStoreOpen ? 'translate-x-6' : 'translate-x-1'}`}/>
+          </button>
+        </div>
+        <p className="text-sm text-gray-500 mt-2">Use this toggle to accept or pause incoming online orders.</p>
+      </div>
       
       <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-2xl font-bold mb-4">Opening Hours</h2>
@@ -114,6 +177,8 @@ const AdminSiteSettingsPage = () => {
       >
         Save All Settings
       </button>
+      <TwoFactorSetup />
+      <ChangePassword />
     </div>
   );
 };

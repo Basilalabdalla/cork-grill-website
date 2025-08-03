@@ -24,12 +24,12 @@ const getHomePageContent = async (req, res) => {
 // @access  Private/Admin
 const updateHomePageContent = async (req, res) => {
   try {
-    const { popularItemIds, openingHours } = req.body;
+    const { popularItemIds, openingHours, isStoreOpen } = req.body;
     
     const content = await HomePageContent.findOneAndUpdate(
       { singletonKey: 'main' },
-      { popularItemIds, openingHours },
-      { new: true, upsert: true } // Options: return the new version, create if it doesn't exist
+      { popularItemIds, openingHours, isStoreOpen },
+      { new: true, upsert: true }
     ).populate('popularItemIds');
 
     res.json(content);
