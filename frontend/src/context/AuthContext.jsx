@@ -1,17 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
-const refreshAdminInfo = async (token) => {
-    // This is a placeholder for a future /api/admin/me endpoint.
-    // For now, we will decode the token to get the 2FA status.
-    // A better solution would be to fetch the user profile from the backend.
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const userRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/user/${payload.id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const updatedAdmin = await userRes.json();
-    login(updatedAdmin);
-};
-
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -19,29 +7,32 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [adminInfo, setAdminInfo] = useState(null);
-  const [loading, setLoading] = useState(true); // <-- NEW: Add loading state, default to true
-
-  useEffect(() => {
+  // --- THIS IS THE CRITICAL FIX ---
+  // Initialize state directly from localStorage. This is a synchronous operation.
+  const [adminInfo, setAdminInfo] = useState(() => {
     try {
-      const storedAdminInfo = localStorage.getItem('adminInfo');
-      if (storedAdminInfo) {
-        setAdminInfo(JSON.parse(storedAdminInfo));
+      const storedInfo = localStorage.getItem('adminInfo');
+      if (storedInfo) {
+        const parsedInfo = JSON.parse(storedInfo);
+        // Check if the session has expired (5 minutes)
+        const fiveMinutes = 5 * 60 * 1000;
+        if (new Date().getTime() - parsedInfo.loginTime < fiveMinutes) {
+          return parsedInfo;
+        }
       }
+      return null; // Return null if no stored info or if it's expired
     } catch (error) {
-      console.error("Failed to parse admin info from localStorage", error);
-      // Ensure state is clean if localStorage is corrupted
-      setAdminInfo(null);
-    } finally {
-      // --- NEW: This is critical ---
-      // After checking localStorage, set loading to false so the app can proceed.
-      setLoading(false); 
+      return null;
     }
-  }, []);
+  });
+
+  const [loading, setLoading] = useState(false); // We can remove the initial loading state
 
   const login = (data) => {
-    localStorage.setItem('adminInfo', JSON.stringify(data));
-    setAdminInfo(data);
+    // When logging in, add the current timestamp
+    const sessionData = { ...data, loginTime: new Date().getTime() };
+    localStorage.setItem('adminInfo', JSON.stringify(sessionData));
+    setAdminInfo(sessionData);
   };
 
   const logout = () => {
@@ -49,7 +40,23 @@ export const AuthProvider = ({ children }) => {
     setAdminInfo(null);
   };
 
-  // Provide the new loading state along with the other values
-  const value = { adminInfo, login, logout, refreshAdminInfo }; 
+  // This effect will run in the background to check for session timeout
+  useEffect(() => {
+    const checkSession = () => {
+      if (adminInfo) {
+        const fiveMinutes = 5 * 60 * 1000;
+        if (new Date().getTime() - adminInfo.loginTime > fiveMinutes) {
+          console.log("Session expired. Logging out.");
+          logout();
+        }
+      }
+    };
+    // Check the session every minute
+    const interval = setInterval(checkSession, 60 * 1000);
+    return () => clearInterval(interval);
+  }, [adminInfo]);
+
+  const value = { adminInfo, loading, login, logout };
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
