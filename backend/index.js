@@ -2,45 +2,52 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
-const cors = require('cors'); // We still need to require it, but won't use our options
+const cors = require('cors');
 const connectDB = require('./config/db');
 
-const homePageRoutes = require('./routes/homePageRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const promotionRoutes = require('./routes/promotionRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const homePageRoutes = require('./routes/homePageRoutes');
 
 connectDB();
 const app = express();
 app.use(express.json());
 
-// --- TEMPORARY DEBUGGING MIDDLEWARE ---
-// This manually sets CORS headers to allow ALL origins.
-// This is NOT secure for production, but it is the ultimate test.
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  next();
-});
-// --- We are no longer using app.use(cors(corsOptions)) ---
+// --- THIS IS THE FINAL, CORRECT CORS CONFIGURATION ---
+const whitelist = [
+    'http://localhost:5173', // Your local dev frontend
+    'https://cork-grill-website.vercel.app' // Your main production frontend URL
+];
 
+const corsOptions = {
+    origin: function (origin, callback) {
+        // The 'origin' is the URL of the site making the request (e.g., your Vercel URL)
+        // We check if the incoming origin is in our whitelist.
+        // We also allow requests that have no origin (like Postman or server-to-server)
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true); // Allow the request
+        } else {
+            console.error(`CORS Error: Request from origin ${origin} blocked.`);
+            callback(new Error('Not allowed by CORS')); // Block the request
+        }
+    }
+};
 
-// --- API Routes ---
-app.use('/api/homepage', homePageRoutes);
+app.use(cors(corsOptions));
+// --- END OF FINAL CORS CONFIGURATION ---
+
+// API Routes
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/promotions', promotionRoutes);
-app.use('/api/categories', categoryRoutes);
 app.use('/api/upload', uploadRoutes);
-
+app.use('/api/homepage', homePageRoutes);
 
 const PORT = process.env.PORT || 5002;
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
