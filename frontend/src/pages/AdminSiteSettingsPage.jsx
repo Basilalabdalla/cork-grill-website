@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const AdminSiteSettingsPage = () => {
   const [openingHours, setOpeningHours] = useState({ weekdays: '', weekends: '' });
   const [popularItemIds, setPopularItemIds] = useState([]);
-  const [allItems, setAllItems] = useState([]); // To list all available menu items
+  const [allItems, setAllItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { adminInfo } = useAuth();
 
-  // Fetch initial site settings and all menu items
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,14 +17,17 @@ const AdminSiteSettingsPage = () => {
           fetch(`${import.meta.env.VITE_API_URL}/api/homepage`),
           fetch(`${import.meta.env.VITE_API_URL}/api/menu`),
         ]);
+        if (!homeContentRes.ok || !menuItemsRes.ok) throw new Error('Failed to load settings data.');
+        
         const homeContentData = await homeContentRes.json();
         const menuItemsData = await menuItemsRes.json();
 
         setOpeningHours(homeContentData.openingHours || { weekdays: '', weekends: '' });
+        // Make sure we only store the IDs of the populated items
         setPopularItemIds(homeContentData.popularItemIds.map(item => item._id) || []);
         setAllItems(menuItemsData);
       } catch (err) {
-        setError('Failed to load site settings.');
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -34,11 +36,9 @@ const AdminSiteSettingsPage = () => {
   }, []);
 
   const handlePopularItemToggle = (itemId) => {
-    if (popularItemIds.includes(itemId)) {
-      setPopularItemIds(popularItemIds.filter(id => id !== itemId));
-    } else {
-      setPopularItemIds([...popularItemIds, itemId]);
-    }
+    setPopularItemIds(prev => 
+      prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]
+    );
   };
 
   const handleSave = async () => {
@@ -52,20 +52,19 @@ const AdminSiteSettingsPage = () => {
         body: JSON.stringify({ openingHours, popularItemIds }),
       });
       if (!response.ok) throw new Error('Failed to save settings.');
-      alert('Settings saved successfully!');
+      alert('Site settings saved successfully!');
     } catch (err) {
       alert(`Error: ${err.message}`);
     }
   };
 
   if (loading) return <div>Loading settings...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">Site Settings</h1>
+      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-6">{error}</p>}
       
-      {/* Opening Hours Form */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-2xl font-bold mb-4">Opening Hours</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,7 +89,6 @@ const AdminSiteSettingsPage = () => {
         </div>
       </div>
 
-      {/* Popular Items Form */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Most Popular Items</h2>
         <p className="text-sm text-gray-600 mb-4">Select items to feature on the homepage carousel.</p>
@@ -102,9 +100,9 @@ const AdminSiteSettingsPage = () => {
                 id={`popular-${item._id}`}
                 checked={popularItemIds.includes(item._id)}
                 onChange={() => handlePopularItemToggle(item._id)}
-                className="h-4 w-4 rounded"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
-              <label htmlFor={`popular-${item._id}`} className="ml-2">{item.name}</label>
+              <label htmlFor={`popular-${item._id}`} className="ml-2 text-sm text-gray-700">{item.name}</label>
             </div>
           ))}
         </div>
@@ -112,7 +110,7 @@ const AdminSiteSettingsPage = () => {
       
       <button 
         onClick={handleSave} 
-        className="mt-8 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+        className="mt-8 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors text-lg"
       >
         Save All Settings
       </button>
