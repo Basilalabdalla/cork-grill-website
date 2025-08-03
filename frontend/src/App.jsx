@@ -1,25 +1,60 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import AdminDashboardPage from './pages/AdminDashboardPage'; 
-import ProtectedRoute from './components/ProtectedRoute';
+import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
+
+// Providers
+import { CartProvider } from './context/CartContext.jsx';
+
+// Core Components
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import CookieBanner from './components/CookieBanner.jsx';
+
+// Page Components
+import HomePage from './pages/HomePage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+
+// Admin Components and Pages
+import AdminLayout from './components/admin/AdminLayout.jsx';
+import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
+import AdminMenuPage from './pages/AdminMenuPage.jsx';
+import AdminPromotionsPage from './pages/AdminPromotionsPage.jsx';
+import AdminSiteSettingsPage from './pages/AdminSiteSettingsPage.jsx';
+
+const PublicLayout = () => (
+  <CartProvider>
+    <Outlet /> 
+  </CartProvider>
+);
 
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* --- Public Routes --- */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-grow">
+          <Routes>
+            {/* --- Public Routes --- */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+            
+            <Route path="/login" element={<LoginPage />} />
 
-        {/* --- Protected Admin Routes --- */}
-        <Route path="/admin" element={<ProtectedRoute />}>
-          {/* Any route nested inside here is now protected */}
-          <Route path="dashboard" element={<AdminDashboardPage />} />
-          {/* We can add more protected routes here later, e.g., /admin/menu-editor */}
-        </Route>
+            {/* --- CORRECTED ADMIN ROUTE STRUCTURE --- */}
+            <Route element={<ProtectedRoute />}>
+              {/* All routes nested inside here will be protected */}
+              <Route path="/admin" element={<AdminLayout />}>
+                {/* These child routes will be rendered inside AdminLayout's <Outlet> */}
+                <Route index element={<AdminDashboardPage />} />
+                <Route path="dashboard" element={<AdminDashboardPage />} />
+                <Route path="menu" element={<AdminMenuPage />} />
+                <Route path="promotions" element={<AdminPromotionsPage />} />
+                <Route path="settings" element={<AdminSiteSettingsPage />} />
+              </Route>
+            </Route>
 
-      </Routes>
+          </Routes>
+        </main>
+        
+        <CookieBanner />
+      </div>
     </Router>
   );
 }

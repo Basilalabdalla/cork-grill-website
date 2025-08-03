@@ -7,11 +7,24 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const localData = localStorage.getItem('cartItems');
+      return localData ? JSON.parse(localData) : [];
+    } catch (error) {
+      console.error("Could not parse cart data from localStorage");
+      return [];
+    }
+  });
   const [promotions, setPromotions] = useState([]);
   const [cartKey, setCartKey] = useState(0); // This is our animation trigger
 
   useEffect(() => {
+    // We save the current state of the cart to localStorage.
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => { 
     const fetchPromotions = async () => {
       try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/promotions`);

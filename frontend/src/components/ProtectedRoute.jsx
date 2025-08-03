@@ -1,20 +1,17 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const ProtectedRoute = () => {
-  // Get both adminInfo AND the new loading state from our context
   const { adminInfo, loading } = useAuth();
 
-  // --- THIS IS THE NEW LOGIC ---
-  // 1. If we are still loading, don't render anything yet.
-  //    You could also return a loading spinner component here.
+  // While we check for the user's session, we can show a loading message
   if (loading) {
-    return null; // or <LoadingSpinner />
+    return <div>Loading session...</div>;
   }
 
-  // 2. Once loading is false, then check for adminInfo.
-  //    If it exists, show the protected content.
-  //    If not, redirect to login.
+  // If the user is logged in, render the child route (e.g., the AdminLayout).
+  // The <Outlet /> is a placeholder for whatever nested route is matched.
+  // If the user is not logged in, redirect them to the login page.
   return adminInfo ? <Outlet /> : <Navigate to="/login" replace />;
 };
 

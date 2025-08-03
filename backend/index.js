@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors'); // We still need to require it, but won't use our options
 const connectDB = require('./config/db');
 
+const homePageRoutes = require('./routes/homePageRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 
 // --- API Routes ---
+app.use('/api/homepage', homePageRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
