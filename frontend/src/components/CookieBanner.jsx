@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 const CookieBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Check on initial load if consent has already been given
   useEffect(() => {
+    // This logic still works. It checks if ANY choice has been made.
     const consent = localStorage.getItem('cookie_consent');
     if (!consent) {
       setIsVisible(true);
@@ -13,7 +13,15 @@ const CookieBanner = () => {
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem('cookie_consent', 'true');
+    // Save 'accepted' state and hide banner
+    localStorage.setItem('cookie_consent', 'accepted');
+    setIsVisible(false);
+  };
+
+  // --- NEW: Handler for the reject button ---
+  const handleReject = () => {
+    // Save 'rejected' state and hide banner
+    localStorage.setItem('cookie_consent', 'rejected');
     setIsVisible(false);
   };
 
@@ -30,10 +38,20 @@ const CookieBanner = () => {
           <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">
               <h3 className="text-xl font-bold">Your data. Your choice.</h3>
-              <p className="text-gray-600 text-sm mt-1">We use technologies, such as cookies, to personalise advertising and content. Click "Accept Cookies" to agree to the use of these technologies.</p>
+              <p className="text-gray-600 text-sm mt-1">We use cookies to enhance your experience and for personalized advertising. Click "Accept" to agree to their use.</p>
             </div>
+            {/* --- THIS IS THE UPDATED BUTTONS SECTION --- */}
             <div className="flex-shrink-0 flex items-center gap-3">
-              <button onClick={handleAccept} className="bg-yellow-400 hover:bg-yellow-500 font-bold py-2 px-6 rounded-md transition-colors">
+              <button 
+                onClick={handleReject} 
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-md transition-colors"
+              >
+                Reject All
+              </button>
+              <button 
+                onClick={handleAccept} 
+                className="bg-yellow-400 hover:bg-yellow-500 font-bold py-2 px-6 rounded-md transition-colors"
+              >
                 Accept Cookies
               </button>
             </div>
