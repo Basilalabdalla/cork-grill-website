@@ -31,18 +31,19 @@ export const CartProvider = ({ children }) => {
     setCartKey(prevKey => prevKey + 1); // Trigger animation
   };
 
-  const addToCart = (item) => {
-    const exist = cartItems.find((x) => x._id === item._id);
-    let newCartItems;
-    if (exist) {
-      newCartItems = cartItems.map((x) =>
-        x._id === item._id ? { ...exist, qty: exist.qty + 1 } : x
-      );
-    } else {
-      newCartItems = [...cartItems, { ...item, qty: 1 }];
-    }
-    updateCartAndAnimate(newCartItems);
-  };
+  const addToCart = (item, quantity = 1) => {
+  // Use 'cartId' for checking existence, which includes customizations
+  const exist = cartItems.find((x) => x.cartId === item.cartId);
+  let newCartItems;
+  if (exist) {
+    newCartItems = cartItems.map((x) =>
+      x.cartId === item.cartId ? { ...exist, qty: exist.qty + quantity } : x
+    );
+  } else {
+    newCartItems = [...cartItems, { ...item, qty: quantity }];
+  }
+  updateCartAndAnimate(newCartItems);
+};
 
   const increaseQuantity = (itemId) => {
     const newCartItems = cartItems.map((x) =>

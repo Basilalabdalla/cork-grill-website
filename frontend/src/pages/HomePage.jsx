@@ -4,6 +4,7 @@ import Cart from '../components/Cart';
 import CategoryNavbar from '../components/CategoryNavbar';
 import { motion } from 'framer-motion';
 import BackToTopButton from '../components/BackToTopButton'; 
+import ItemDetailModal from '../components/ItemDetailModal';
 
 const HomePage = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -11,6 +12,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
+  const [selectedItem, setSelectedItem] = useState(null);
 
   // This state will now be controlled by the scroll position
   const [activeCategory, setActiveCategory] = useState('');
@@ -119,7 +121,7 @@ const HomePage = () => {
                         <p className="text-gray-600 mb-4 flex-grow text-sm">{item.description}</p>
                         <div className="flex justify-between items-center mt-4">
                           <p className="text-xl font-bold text-green-600">€{item.price.toFixed(2)}</p>
-                          <button onClick={() => addToCart(item)} className="bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors duration-300">Add</button>
+                          <button onClick={() => setSelectedItem(item)} className="bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors duration-300">Add</button>
                         </div>
                       </div>
                     </motion.div>
@@ -141,6 +143,8 @@ const HomePage = () => {
         <Cart />
       </div>
       <BackToTopButton />
+
+    <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
     </div>
   );
 };
