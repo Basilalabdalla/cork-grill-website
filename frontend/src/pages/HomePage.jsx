@@ -9,6 +9,7 @@ import PopularItemsCarousel from '../components/PopularItemsCarousel.jsx';
 import LunchDealBanner from '../components/LunchDealBanner.jsx';
 import OpeningHours from '../components/OpeningHours.jsx';
 import PromotionsCarousel from '../components/PromotionsCarousel.jsx';
+import MenuItemRow from '../components/MenuItemRow.jsx';
 
 const HomePage = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -92,7 +93,7 @@ const HomePage = () => {
   const isStoreOpen = homeContent?.isStoreOpen ?? true;
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-white"> 
       <header className="text-center py-6 md:py-10 bg-white border-b">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Cork Grill</h1>
         <p className="text-md md:text-lg text-gray-500 mt-2">American - Burgers - Mediterranean</p>
@@ -119,32 +120,26 @@ const HomePage = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           <main className="lg:w-3/4 space-y-12 pb-24">
             {menuByCategory.map(categoryGroup => (
-              <section key={categoryGroup._id} id={categoryGroup.name} ref={el => (categoryRefs.current[categoryGroup.name] = el)}>
-                <h2 className="text-3xl font-bold mb-6 tracking-tight text-gray-900">{categoryGroup.name}</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+              <section 
+                key={categoryGroup._id} 
+                id={categoryGroup.name}
+                ref={el => (categoryRefs.current[categoryGroup.name] = el)}
+              >
+                <h2 className="text-3xl font-bold mb-4 tracking-tight text-gray-900">{categoryGroup.name}</h2>
+                <div className="flex flex-col">
                   {categoryGroup.items.map(item => (
-                    <motion.div key={item._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300">
-                      <img src={item.imageUrl} alt={item.name} className="w-full h-48 object-cover" />
-                      <div className="p-6 flex flex-col flex-grow">
-                        <h3 className="text-xl font-bold mb-2 text-gray-900">{item.name}</h3>
-                        <p className="text-gray-600 mb-4 flex-grow text-sm">{item.description}</p>
-                        <div className="flex justify-between items-center mt-4">
-                          <p className="text-xl font-bold text-green-600">€{item.price.toFixed(2)}</p>
-                          <button 
-                            onClick={() => setSelectedItem(item)} 
-                            disabled={!isStoreOpen} // Disable the button
-                            className="bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
+                    <MenuItemRow 
+                      key={item._id} 
+                      item={item} 
+                      onSelect={setSelectedItem} 
+                      isStoreOpen={isStoreOpen} 
+                    />
                   ))}
                 </div>
               </section>
             ))}
           </main>
+          
           <aside className="hidden lg:block lg:w-1/4">
             <div className="sticky top-32"><Cart /></div>
           </aside>
@@ -153,7 +148,7 @@ const HomePage = () => {
       
       <div className="lg:hidden"><Cart /></div>
       <BackToTopButton />
-      <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} isStoreOpen={isStoreOpen}/>
+      <ItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} isStoreOpen={isStoreOpen} />
     </div>
   );
 };
