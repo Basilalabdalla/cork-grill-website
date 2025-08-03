@@ -11,41 +11,36 @@ const adminRoutes = require('./routes/adminRoutes');
 const promotionRoutes = require('./routes/promotionRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const homePageRoutes = require('./routes/homePageRoutes');
+const categoryRoutes = require('./routes/categoryRoutes'); // <-- This was the missing import
 
 connectDB();
 const app = express();
-app.use(express.json());
 
-// --- THIS IS THE FINAL, CORRECT CORS CONFIGURATION ---
+// --- CORS Configuration ---
 const whitelist = [
-    'http://localhost:5173', // Your local dev frontend
-    'https://cork-grill-website.vercel.app' // Your main production frontend URL
+    'http://localhost:5173',
+    'https://cork-grill-website.vercel.app'
 ];
-
 const corsOptions = {
     origin: function (origin, callback) {
-        // The 'origin' is the URL of the site making the request (e.g., your Vercel URL)
-        // We check if the incoming origin is in our whitelist.
-        // We also allow requests that have no origin (like Postman or server-to-server)
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-            callback(null, true); // Allow the request
+        if (whitelist.indexOf(origin) !== -1 || !origin || origin.endsWith('.vercel.app')) {
+            callback(null, true);
         } else {
-            console.error(`CORS Error: Request from origin ${origin} blocked.`);
-            callback(new Error('Not allowed by CORS')); // Block the request
+            callback(new Error('Not allowed by CORS'));
         }
     }
 };
-
 app.use(cors(corsOptions));
-// --- END OF FINAL CORS CONFIGURATION ---
+app.use(express.json());
 
-// API Routes
+// --- API Routes ---
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/promotions', promotionRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/homepage', homePageRoutes);
+app.use('/api/categories', categoryRoutes); // <-- THIS WAS THE MISSING LINE
 
 const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
