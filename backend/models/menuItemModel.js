@@ -1,47 +1,70 @@
 const mongoose = require('mongoose');
 
-// This is the blueprint for each menu item in our database
+// This is a new "sub-schema" for individual options like "Coca-Cola" or "Extra Cheese".
+// It will be used inside the customization groups.
+const optionSchema = new mongoose.Schema({
+  name: { 
+    type: String, 
+    required: true 
+  },
+  price: { 
+    type: Number, 
+    default: 0 // Price can be 0 (for included options) or an additional charge.
+  },
+});
+
+// This is a new "sub-schema" for groups of options, like "Choose your drink".
+const customizationGroupSchema = new mongoose.Schema({
+  title: { 
+    type: String, 
+    required: true // e.g., "Make It a Meal" or "Choose up to 2 Dips"
+  },
+  // 'SINGLE' is for radio buttons (choose one), 'MULTIPLE' is for checkboxes (choose many).
+  type: { 
+    type: String, 
+    required: true, 
+    enum: ['SINGLE', 'MULTIPLE'],
+    default: 'SINGLE' 
+  },
+  // This field is for "MULTIPLE" choice, to limit how many can be selected.
+  // e.g., For "Choose 2 drinks", this would be 2.
+  maxSelections: { 
+    type: Number,
+    default: 1,
+  },
+  // This holds the actual list of choices, like "Ketchup", "Garlic", etc.
+  options: [optionSchema],
+});
+
+// This is your main schema, now with the new 'customizationGroups' field added.
 const menuItemSchema = new mongoose.Schema(
   {
-    // We will add a 'category' field later to link items to categories
-    name: {
-      type: String,
-      required: true, // Every menu item must have a name
-      trim: true,     // Removes whitespace from the start and end
+    name: { 
+      type: String, 
+      required: true, 
+      trim: true 
     },
-    description: {
-      type: String,
-      required: true,
+    category: { 
+      type: String, 
+      required: true 
     },
-    category: {
-      type: String,
-      required: true,
-      default: 'Uncategorized' // A sensible default
+    description: { 
+      type: String, 
+      required: true 
     },
-    price: {
-      type: Number,
-      required: true,
-      min: 0, // Price cannot be negative
+    price: { 
+      type: Number, 
+      required: true 
     },
-    imageUrl: {
-      type: String,
-      required: true,
+    imageUrl: { 
+      type: String, 
+      required: true 
     },
-    // This allows us to add customization options later, like "Extra Cheese"
-    customizationOptions: [
-      {
-        name: String,
-        price: Number,
-      },
-    ],
+    // The new field that holds all customization data for an item.
+    customizationGroups: [customizationGroupSchema], 
   },
-  {
-    // This automatically adds `createdAt` and `updatedAt` fields
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Create the model from the schema
 const MenuItem = mongoose.model('MenuItem', menuItemSchema);
-
 module.exports = MenuItem;

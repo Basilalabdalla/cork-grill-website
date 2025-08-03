@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext'; // To get the token
 import { useNavigate } from 'react-router-dom'; // Import for logout redirect
-import AddItemForm from '../components/AddItemForm';
-import EditItemModal from '../components/EditItemModal';
-import PromotionManager from '../components/PromotionManager';
+import AddItemForm from '../components/admin/AddItemForm';
+import EditItemModal from '../components/admin/EditItemModal';
+import PromotionManager from '../components/admin/PromotionManager';
 
 const AdminDashboardPage = () => {
   const [menuItems, setMenuItems] = useState([]);
