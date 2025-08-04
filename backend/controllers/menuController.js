@@ -12,12 +12,15 @@ const getMenuItems = async (req, res) => {
   }
 };
 
+
 // --- NEW ---
 // @desc    Create a new menu item
 // @route   POST /api/menu
 // @access  Private/Admin
 const createMenuItem = async (req, res) => {
-  const { name, description, price, imageUrl } = req.body;
+  console.log("--- CREATE MENU ITEM DEBUG ---");
+  console.log("Received Body:", req.body);
+const { name, description, price, imageUrl, category, customizationGroups } = req.body;
 
   try {
     const menuItem = new MenuItem({
@@ -25,11 +28,18 @@ const createMenuItem = async (req, res) => {
       description,
       price,
       imageUrl,
+      category,
+      customizationGroups
     });
 
     const createdMenuItem = await menuItem.save();
+    console.log("--- SUCCESS: Item Saved ---");
     res.status(201).json(createdMenuItem);
+    
   } catch (error) {
+    // This will now give us the exact validation error from Mongoose
+    console.error("--- ERROR: Mongoose validation failed ---");
+    console.error(error);
     res.status(400).json({ message: 'Failed to create menu item', error: error.message });
   }
 };

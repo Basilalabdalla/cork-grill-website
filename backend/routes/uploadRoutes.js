@@ -5,50 +5,53 @@ const { protect } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Configure multer for in-memory storage. 
-// This is efficient because we don't need to save the file to our server's disk.
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
-// Define the upload route. It's protected, so only admins can upload.
-// 'upload.single('image')' tells multer to expect a single file named 'image'.
+// --- THIS IS THE CRITICAL FIX ---
+const upload = multer({ 
+  storage: storage,
+  // We are now telling multer to accept files up to 15MB.
+  // This is larger than Cloudinary's 10MB limit, which ensures that
+  // the file is passed to Cloudinary for processing, where it will be resized.
+  limits: { fileSize: 15 * 1024 * 1024 } // 15 Megabytes
+});
+// --- END OF FIX ---
+
 router.post('/', protect, upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No image file provided.' });
   }
 
   try {
-    // Multer adds the file to the request object. We can then upload it.
-    // We upload the file buffer to Cloudinary.
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { 
-    folder: 'cork-grill',
-    // --- NEW: Add this transformation ---
-    transformation: [
-      // This will resize the image to be a maximum of 1200px wide,
-      // keeping the aspect ratio, and will set the quality to auto.
-      // This drastically reduces the file size of large images.
-      { width: 1200, crop: 'limit', quality: 'auto' }
-    ]
-  }, 
+        {
+          folder: 'cork-grill',
+          transformation: [
+            { width: 1200, crop: 'limit' },
+            { quality: 'auto:good' }
+          ]
+        },
         (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
+          if (error) return reject(error);
+          resolve(result);
         }
       );
       uploadStream.end(req.file.buffer);
     });
 
-    // Send back the secure URL of the uploaded image.
     res.status(201).json({ 
-      message: 'Image uploaded successfully', 
+      message: 'Image uploaded and optimized successfully', 
       imageUrl: result.secure_url 
     });
 
   } catch (error) {
+    // This now provides a much better error message if Cloudinary is the one rejecting the file
+    if (error.http_code === 400 && error.message.includes('File size too large')) {
+        return res.status(400).json({ message: `File size too large. Cloudinary's limit is 10MB.`});
+    }
     console.error('Cloudinary Upload Error:', error);
-    res.status(500).json({ message: 'Failed to upload image.', error });
+    res.status(500).json({ message: 'Failed to upload image.' });
   }
 });
 
