@@ -15,8 +15,8 @@ export const AuthProvider = ({ children }) => {
       if (storedInfo) {
         const parsedInfo = JSON.parse(storedInfo);
         // Check if the session has expired (5 minutes)
-        const fiveMinutes = 5 * 60 * 1000;
-        if (new Date().getTime() - parsedInfo.loginTime < fiveMinutes) {
+        const twoHours = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+if (new Date().getTime() - parsedInfo.loginTime < twoHours) {
           return parsedInfo;
         }
       }
@@ -42,19 +42,17 @@ export const AuthProvider = ({ children }) => {
 
   // This effect will run in the background to check for session timeout
   useEffect(() => {
-    const checkSession = () => {
-      if (adminInfo) {
-        const fiveMinutes = 5 * 60 * 1000;
-        if (new Date().getTime() - adminInfo.loginTime > fiveMinutes) {
-          console.log("Session expired. Logging out.");
-          logout();
-        }
+  const checkSession = () => {
+    if (adminInfo) {
+      const twoHours = 2 * 60 * 60 * 1000;
+      if (new Date().getTime() - adminInfo.loginTime > twoHours) {
+        logout();
       }
-    };
-    // Check the session every minute
-    const interval = setInterval(checkSession, 60 * 1000);
-    return () => clearInterval(interval);
-  }, [adminInfo]);
+    }
+  };
+  const interval = setInterval(checkSession, 60 * 1000);
+  return () => clearInterval(interval);
+}, [adminInfo]);
 
   const value = { adminInfo, loading, login, logout };
 

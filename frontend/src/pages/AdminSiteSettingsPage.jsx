@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import TwoFactorSetup from '../components/admin/TwoFactorSetup.jsx';
+import CategoryManager from '../components/admin/CategoryManager.jsx';
 
 const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState('');
@@ -170,7 +171,7 @@ const AdminSiteSettingsPage = () => {
           ))}
         </div>
       </div>
-      
+      <CategoryManager />
       <button 
         onClick={handleSave} 
         className="mt-8 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors text-lg"
