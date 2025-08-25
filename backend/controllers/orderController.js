@@ -3,7 +3,7 @@ const { randomUUID } = require('crypto');
 const Promotion = require('../models/promotionModel');
 
 const squareClient = new Client({
-  environment: Environment.Sandbox,
+  environment: Environment.Production,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 
