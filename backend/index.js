@@ -19,10 +19,13 @@ const app = express();
 // --- CORS Configuration ---
 const whitelist = [
     'http://localhost:5173',
-    'https://cork-grill-website.vercel.app' ,  'https://corkgrill.com',
-    'http://corkgrill.com' ,  'https://corkgrill.ie', 'http://corkgrill.ie'
-    
+    'https://cork-grill-website.vercel.app',
+    'https://corkgrill.com',
+    'http://corkgrill.com',
+    'https://corkgrill.ie',
+    'http://corkgrill.ie'
 ];
+
 const corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin || origin.endsWith('.vercel.app')) {
