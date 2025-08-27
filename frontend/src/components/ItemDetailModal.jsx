@@ -21,7 +21,7 @@ const ItemDetailModal = ({ item, onClose, isStoreOpen }) => {
   if (!item) return null;
 
   const handleOptionChange = (group, option) => {
-    setValidationError(''); // Clear validation error on any change
+    setValidationError('');
     setSelectedOptions(prev => {
       const newSelections = { ...prev };
       const currentGroupSelections = newSelections[group.title] || [];
@@ -42,28 +42,9 @@ const ItemDetailModal = ({ item, onClose, isStoreOpen }) => {
   const optionsPrice = Object.values(selectedOptions).flat().reduce((total, option) => total + (option.price || 0), 0);
   const totalPrice = (item.price + optionsPrice) * quantity;
   const unlockedGroupTitles = Object.values(selectedOptions).flat().flatMap(option => option.unlocksGroups || []);
-
+  
+  // --- THIS IS THE CORRECTED VALIDATION LOGIC ---
   const checkValidation = () => {
-  const visibleGroups = item.customizationGroups.filter(group => {
-    const isPrimary = !item.customizationGroups.some(g => g.options.some(o => o.unlocksGroups?.includes(group.title)));
-    const isUnlocked = unlockedGroupTitles.includes(group.title);
-    return isPrimary || isUnlocked;
-  });
-
-  for (const group of visibleGroups) {
-    if (group.isRequired) {
-      const selections = selectedOptions[group.title] || [];
-      if (selections.length === 0) {
-        return `Please make a selection for "${group.title}".`;
-      }
-    }
-  }
-  return '';
-};
-
-  // --- THIS IS THE CORRECTED FUNCTION ---
-  const handleAddToCart = () => {
-    setValidationError('');
     const visibleGroups = item.customizationGroups.filter(group => {
       const isPrimary = !item.customizationGroups.some(g => g.options.some(o => o.unlocksGroups?.includes(group.title)));
       const isUnlocked = unlockedGroupTitles.includes(group.title);
@@ -71,22 +52,29 @@ const ItemDetailModal = ({ item, onClose, isStoreOpen }) => {
     });
 
     for (const group of visibleGroups) {
-      const selections = selectedOptions[group.title] || [];
-      // This is a simple required check. More complex logic could be added (e.g. a 'required' flag in the DB)
-      if (selections.length === 0) {
-        setValidationError(`Please make a selection for "${group.title}".`);
-        return; // Stop if validation fails
+      // We explicitly check if the isRequired flag is true
+      if (group.isRequired === true) {
+        const selections = selectedOptions[group.title] || [];
+        if (selections.length === 0) {
+          return `Please make a selection for "${group.title}".`;
+        }
       }
     }
-    
-    // Define finalItem here, AFTER validation passes
+    return ''; // No errors
+  };
+
+  const handleAddToCart = () => {
+    const error = checkValidation();
+    if (error) {
+      setValidationError(error);
+      return;
+    }
     const finalItem = {
       ...item,
       cartId: `${item._id}-${JSON.stringify(selectedOptions)}`,
       selectedOptions,
       price: item.price + optionsPrice
     };
-    
     addToCart(finalItem, quantity);
     onClose();
   };
@@ -106,7 +94,11 @@ const ItemDetailModal = ({ item, onClose, isStoreOpen }) => {
                 if (!isPrimaryGroup && !isUnlocked) return null;
                 return (
                   <div key={groupIndex} className="mt-6 border-t pt-4">
-                    <div className="flex justify-between items-center"><h3 className="text-xl font-semibold">{group.title}</h3><span className="text-sm font-medium text-gray-500">Required</span></div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xl font-semibold">{group.title}</h3>
+                      {/* --- THIS IS THE DYNAMIC "REQUIRED" LABEL --- */}
+                      {group.isRequired && <span className="text-sm font-medium text-red-600">Required</span>}
+                    </div>
                     <div className="mt-2 space-y-2">{group.options.map((option, optionIndex) => { const isSelected = selectedOptions[group.title]?.some(o => o.name === option.name); return (<div key={optionIndex} onClick={() => handleOptionChange(group, option)} className="flex justify-between items-center p-3 rounded-lg border cursor-pointer transition-colors hover:bg-gray-50"><div><span className="font-medium">{option.name}</span>{option.price > 0 && <span className="text-sm text-gray-500 ml-2">+€{option.price.toFixed(2)}</span>}</div><div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${isSelected ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>{isSelected && <span className="text-white font-bold">✓</span>}</div></div>);})}</div>
                   </div>
                 );
