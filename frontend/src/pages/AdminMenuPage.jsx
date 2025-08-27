@@ -9,7 +9,6 @@ const AdminMenuPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingItem, setEditingItem] = useState(null);
-  
   const { adminInfo } = useAuth();
 
   useEffect(() => {
@@ -36,9 +35,15 @@ const AdminMenuPage = () => {
     fetchData();
   }, []);
   
-  const handleNewItem = (newItem) => setMenuItems((prev) => [...prev, newItem]);
-  const handleUpdateItem = (updatedItem) => setMenuItems((prev) => prev.map(item => item._id === updatedItem._id ? updatedItem : item));
+  const handleNewItem = (newItem) => {
+    setMenuItems((prev) => [...prev, newItem]);
+  };
 
+  const handleUpdateItem = (updatedItem) => {
+    setMenuItems((prevItems) => 
+      prevItems.map((item) => (item._id === updatedItem._id ? updatedItem : item))
+    );
+  };
   const handleDelete = async (itemId) => {
     if (!window.confirm('Are you sure?')) return;
     try {
@@ -63,9 +68,6 @@ const AdminMenuPage = () => {
         <AddItemForm onNewItem={handleNewItem} categories={categories} />
         <div className="bg-white p-6 rounded-lg shadow-md mt-8">
           <h2 className="text-2xl font-bold mb-4">Current Menu</h2>
-          
-          {/* --- THIS IS THE FIX --- */}
-          {/* We wrap the table in a div that allows horizontal scrolling on small screens */}
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -91,8 +93,6 @@ const AdminMenuPage = () => {
               </tbody>
             </table>
           </div>
-          {/* --- END OF FIX --- */}
-          
         </div>
       </div>
       <EditItemModal 

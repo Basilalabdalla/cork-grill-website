@@ -45,41 +45,33 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = (item, quantity = 1) => {
-  // Use 'cartId' for checking existence, which includes customizations
-  const exist = cartItems.find((x) => x.cartId === item.cartId);
-  let newCartItems;
-  if (exist) {
-    newCartItems = cartItems.map((x) =>
-      x.cartId === item.cartId ? { ...exist, qty: exist.qty + quantity } : x
-    );
-  } else {
-    newCartItems = [...cartItems, { ...item, qty: quantity }];
-  }
-  updateCartAndAnimate(newCartItems);
-};
-
-  const increaseQuantity = (itemId) => {
-    const newCartItems = cartItems.map((x) =>
-      x._id === itemId ? { ...x, qty: x.qty + 1 } : x
-    );
-    updateCartAndAnimate(newCartItems);
-  };
-
-  const decreaseQuantity = (itemId) => {
-    const exist = cartItems.find((x) => x._id === itemId);
+    const exist = cartItems.find((x) => x.cartId === item.cartId);
     let newCartItems;
-    if (exist.qty === 1) {
-      newCartItems = cartItems.filter((x) => x._id !== itemId);
+    if (exist) {
+      newCartItems = cartItems.map((x) => x.cartId === item.cartId ? { ...exist, qty: exist.qty + quantity } : x);
     } else {
-      newCartItems = cartItems.map((x) =>
-        x._id === itemId ? { ...x, qty: x.qty - 1 } : x
-      );
+      newCartItems = [...cartItems, { ...item, qty: quantity }];
     }
     updateCartAndAnimate(newCartItems);
   };
 
-  const removeFromCart = (itemId) => {
-    const newCartItems = cartItems.filter((x) => x._id !== itemId);
+  const increaseQuantity = (cartId) => {
+    const newCartItems = cartItems.map((x) => x.cartId === cartId ? { ...x, qty: x.qty + 1 } : x);
+    updateCartAndAnimate(newCartItems);
+  };
+
+  const decreaseQuantity = (cartId) => {
+    const exist = cartItems.find((x) => x.cartId === cartId);
+    let newCartItems;
+    if (exist.qty === 1) {
+      newCartItems = cartItems.filter((x) => x.cartId !== cartId);
+    } else {
+      newCartItems = cartItems.map((x) => x.cartId === cartId ? { ...x, qty: x.qty - 1 } : x);
+    }
+    updateCartAndAnimate(newCartItems);
+  };
+  const removeFromCart = (cartId) => {
+    const newCartItems = cartItems.filter((x) => x.cartId !== cartId);
     updateCartAndAnimate(newCartItems);
   };
 

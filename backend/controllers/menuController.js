@@ -49,19 +49,32 @@ const { name, description, price, imageUrl, category, customizationGroups } = re
 // @route   PUT /api/menu/:id
 // @access  Private/Admin
 const updateMenuItem = async (req, res) => {
-  const { name, description, price, imageUrl } = req.body;
-  const menuItem = await MenuItem.findById(req.params.id);
+  console.log(`--- Updating Menu Item: ${req.params.id} ---`);
+  console.log('Received data:', JSON.stringify(req.body, null, 2));
 
-  if (menuItem) {
-    menuItem.name = name || menuItem.name;
-    menuItem.description = description || menuItem.description;
-    menuItem.price = price || menuItem.price;
-    menuItem.imageUrl = imageUrl || menuItem.imageUrl;
+  try {
+    const { name, description, price, imageUrl, category, customizationGroups } = req.body;
+    const menuItem = await MenuItem.findById(req.params.id);
 
-    const updatedMenuItem = await menuItem.save();
-    res.json(updatedMenuItem);
-  } else {
-    res.status(404).json({ message: 'Menu item not found' });
+    if (menuItem) {
+      menuItem.name = name || menuItem.name;
+      menuItem.description = description || menuItem.description;
+      menuItem.price = price || menuItem.price;
+      menuItem.imageUrl = imageUrl || menuItem.imageUrl;
+      menuItem.category = category || menuItem.category;
+      menuItem.customizationGroups = customizationGroups || menuItem.customizationGroups;
+
+      const updatedMenuItem = await menuItem.save();
+      console.log('--- SUCCESS: Item updated and saved. ---');
+      res.json(updatedMenuItem);
+    } else {
+      console.error('--- ERROR: Menu item not found in database. ---');
+      res.status(404).json({ message: 'Menu item not found' });
+    }
+  } catch (error) {
+      console.error('--- ERROR: Mongoose validation or server error during update. ---');
+      console.error(error);
+      res.status(400).json({ message: 'Failed to update menu item', error: error.message });
   }
 };
 
