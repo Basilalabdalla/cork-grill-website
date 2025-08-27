@@ -12,6 +12,7 @@ const PromotionManager = () => {
   const [discountValue, setDiscountValue] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   const { adminInfo } = useAuth();
 
@@ -41,14 +42,14 @@ const PromotionManager = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${adminInfo.token}`,
         },
-        body: JSON.stringify({ name, description, discountValue, startTime, endTime, type: 'PERCENT_DISCOUNT' }),
+        body: JSON.stringify({ name, description, discountValue, startTime, endTime, imageUrl, type: 'PERCENT_DISCOUNT' }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Failed to create promotion');
 
       setPromotions([...promotions, data]); // Add to UI instantly
       // Clear form
-      setName(''); setDescription(''); setDiscountValue(''); setStartTime(''); setEndTime('');
+      setName(''); setDescription(''); setDiscountValue(''); setStartTime(''); setEndTime(''); setImageUrl('');
     } catch (err) {
       setError(err.message);
     }
@@ -78,6 +79,9 @@ const PromotionManager = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input type="text" placeholder="Promotion Name" value={name} onChange={e => setName(e.target.value)} required className="p-2 border rounded" />
           <input type="number" placeholder="Discount %" value={discountValue} onChange={e => setDiscountValue(e.target.value)} required className="p-2 border rounded" />
+          <div className="md:col-span-2">
+        <input type="text" placeholder="Promotion Image URL" value={imageUrl} onChange={e => setImageUrl(e.target.value)} required className="p-2 border rounded w-full" />
+      </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700">Start Time</label>
             <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} required className="p-2 border rounded w-full" />

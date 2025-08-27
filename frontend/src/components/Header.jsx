@@ -8,7 +8,7 @@ const Header = () => {
   const activeLinkClass = "text-orange-500";
 
   return (
-    <header className="bg-white/90 backdrop-blur-md sticky top-0 z-40 shadow-sm">
+    <header className="bg-white/90 backdrop-blur-md sticky top-0 z-30 shadow-sm">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <Link to="/" className="text-2xl font-extrabold text-gray-800">

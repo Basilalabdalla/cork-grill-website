@@ -19,7 +19,7 @@ const CategoryNavbar = ({ categories, activeCategory }) => {
   };
 
   return (
-    <nav className="sticky top-0 bg-white/80 backdrop-blur-md shadow-sm py-3 z-20">
+    <nav className="sticky top-[64px] bg-white/90 backdrop-blur-md shadow-sm py-3 z-20">
       <div className="container mx-auto flex items-center gap-2 sm:gap-4 overflow-x-auto px-4 hide-scrollbar">
         {categories.map((category) => (
           <button
@@ -39,13 +39,3 @@ const CategoryNavbar = ({ categories, activeCategory }) => {
   );
 };
 export default CategoryNavbar;
-// Add this CSS to your src/index.css file to hide the scrollbar on the navbar
-/*
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-*/
