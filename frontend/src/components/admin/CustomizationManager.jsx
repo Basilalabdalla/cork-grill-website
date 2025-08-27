@@ -33,13 +33,13 @@ const CustomizationManager = ({ groups, setGroups }) => {
     const newGroups = [...groups];
     // Special handling for unlocksGroups, which should be an array of comma-separated strings
     if (field === 'unlocksGroups') {
-      newGroups[groupIndex].options[optionIndex][field] = value.split(',').map(s => s.trim()).filter(Boolean); // filter(Boolean) removes any empty strings
+      newGroups[groupIndex].options[optionIndex][field] = value.split(',').map(s => s.trim());
     } else {
       newGroups[groupIndex].options[optionIndex][field] = value;
     }
     setGroups(newGroups);
   };
-
+  
   return (
     <div className="p-4 border-t-2 mt-6">
       <h4 className="text-lg font-semibold mb-4">Item Customizations</h4>
