@@ -17,6 +17,10 @@ const promotionSchema = new mongoose.Schema({
     enum: ['PERCENT_DISCOUNT'], // Defines allowed values
     default: 'PERCENT_DISCOUNT',
   },
+  imageUrl: {
+  type: String,
+  required: false, // Make it optional
+  },
   // The discount value, e.g., 10 for a 10% discount
   discountValue: {
     type: Number,
