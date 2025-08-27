@@ -27,11 +27,11 @@ const createOrder = async (req, res) => {
       name: item.name,
       quantity: item.qty.toString(),
       basePriceMoney: { amount: Math.round(item.price * 100), currency: 'EUR' },
-      note: Object.entries(item.selectedOptions || {}).map(([group, opts]) => `${group}: ${opts.map(o => o.name).join(', ')}`).join('; '),
+      note: Object.entries(item.selectedOptions || {}).map(([group, opts]) => `${group}: ${opts.map(o => o.name).join(', ')}`).join('; ') || undefined,
     }));
 
-     const origin = req.get('origin');
-     const redirectBaseUrl = origin || 'https://corkgrill.ie';
+     //const origin = req.get('origin');
+     //const redirectBaseUrl = origin || 'https://corkgrill.ie';
 
     let discounts = [];
     const activePromotions = await Promotion.find({ 
@@ -39,6 +39,7 @@ const createOrder = async (req, res) => {
       startTime: { $lte: new Date() },
       endTime: { $gte: new Date() },
     });
+
     if (activePromotions.length > 0) {
       const bestPromotion = activePromotions.reduce((best, current) => current.discountValue > best.discountValue ? current : best);
       discounts.push({
@@ -47,7 +48,7 @@ const createOrder = async (req, res) => {
         scope: 'ORDER'
       });
     }
-
+    
     // --- THIS IS THE CORRECTED AND SIMPLIFIED FLOW ---
     // Step 1: Create the Payment Link. This ONE call creates the order in Square AND the link.
     const paymentLinkResponse = await squareClient.checkoutApi.createPaymentLink({
@@ -78,6 +79,8 @@ const createOrder = async (req, res) => {
       totalPrice,
     });
     await newOrder.save();
+
+    const paymentUrlWithRedirect = `${paymentLinkResponse.result.paymentLink.url}?redirect_url=${req.get('origin')}/order/${newOrder._id}`;
 
     // Step 4: Send the payment URL back to the frontend
     res.status(201).json({ paymentUrl: paymentLinkResponse.result.paymentLink.url, orderId: newOrder._id });
