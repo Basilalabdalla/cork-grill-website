@@ -3,17 +3,17 @@ const { randomUUID } = require('crypto');
 const Order = require('../models/orderModel');
 const Promotion = require('../models/promotionModel');
 
-const squareClient = new Client({
-  environment: Environment.Production, // This should be set to Production for the live site
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-});
-
 /* Dev
 const squareClient = new Client({
   environment: Environment.Sandbox, // Change to .Production for live
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 */
+
+const squareClient = new Client({
+  environment: Environment.Production,
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+});
 
 const createOrder = async (req, res) => {
   const { cartItems, customer } = req.body;
@@ -30,16 +30,12 @@ const createOrder = async (req, res) => {
       note: Object.entries(item.selectedOptions || {}).map(([group, opts]) => `${group}: ${opts.map(o => o.name).join(', ')}`).join('; ') || undefined,
     }));
 
-     //const origin = req.get('origin');
-     //const redirectBaseUrl = origin || 'https://corkgrill.ie';
-
     let discounts = [];
     const activePromotions = await Promotion.find({ 
       isActive: true,
       startTime: { $lte: new Date() },
       endTime: { $gte: new Date() },
     });
-
     if (activePromotions.length > 0) {
       const bestPromotion = activePromotions.reduce((best, current) => current.discountValue > best.discountValue ? current : best);
       discounts.push({
@@ -48,9 +44,10 @@ const createOrder = async (req, res) => {
         scope: 'ORDER'
       });
     }
-    
-    // --- THIS IS THE CORRECTED AND SIMPLIFIED FLOW ---
-    // Step 1: Create the Payment Link. This ONE call creates the order in Square AND the link.
+
+    const origin = req.get('origin');
+    const redirectBaseUrl = origin || 'https://corkgrill.ie';
+
     const paymentLinkResponse = await squareClient.checkoutApi.createPaymentLink({
       idempotencyKey: randomUUID(),
       order: {
@@ -59,16 +56,13 @@ const createOrder = async (req, res) => {
         discounts,
         note: `Online order for ${customer.name}. Phone: ${customer.phone}`,
       },
-      // We'll create the order status page in the next step
       checkout_options: {
-        redirect_url: `${redirectBaseUrl}/order/${newOrder._id}`
+        redirect_url: `${redirectBaseUrl}/thank-you` // This now uses the correct variable
       }
     });
 
-    // Step 2: Get the Order ID from the successful response
     const squareOrderId = paymentLinkResponse.result.paymentLink.orderId;
     
-    // Step 3: Now that we have the Square Order ID, save our own record to our database
     const verificationCode = Math.floor(10 + Math.random() * 90).toString();
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const newOrder = new Order({
@@ -79,11 +73,11 @@ const createOrder = async (req, res) => {
       totalPrice,
     });
     await newOrder.save();
-
-    const paymentUrlWithRedirect = `${paymentLinkResponse.result.paymentLink.url}?redirect_url=${req.get('origin')}/order/${newOrder._id}`;
-
-    // Step 4: Send the payment URL back to the frontend
-    res.status(201).json({ paymentUrl: paymentLinkResponse.result.paymentLink.url, orderId: newOrder._id });
+    
+    // We will update the redirect_url to point to our specific order page in the next step
+    const finalPaymentUrl = paymentLinkResponse.result.paymentLink.url;
+    
+    res.status(201).json({ paymentUrl: finalPaymentUrl, orderId: newOrder._id });
 
   } catch (error) {
     console.error('CRITICAL SQUARE ERROR:', error);
