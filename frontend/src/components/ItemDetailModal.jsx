@@ -43,6 +43,25 @@ const ItemDetailModal = ({ item, onClose, isStoreOpen }) => {
   const totalPrice = (item.price + optionsPrice) * quantity;
   const unlockedGroupTitles = Object.values(selectedOptions).flat().flatMap(option => option.unlocksGroups || []);
 
+  const checkValidation = () => {
+    const visibleGroups = item.customizationGroups.filter(group => {
+      const isPrimary = !item.customizationGroups.some(g => g.options.some(o => o.unlocksGroups?.includes(group.title)));
+      const isUnlocked = unlockedGroupTitles.includes(group.title);
+      return isPrimary || isUnlocked;
+    });
+
+    for (const group of visibleGroups) {
+      // We now check the isRequired flag from the database
+      if (group.isRequired !== false) { // It's required by default
+        const selections = selectedOptions[group.title] || [];
+        if (selections.length === 0) {
+          return `Please make a selection for "${group.title}".`;
+        }
+      }
+    }
+    return ''; // No errors
+  };
+
   // --- THIS IS THE CORRECTED FUNCTION ---
   const handleAddToCart = () => {
     setValidationError('');

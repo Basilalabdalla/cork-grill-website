@@ -69,6 +69,15 @@ const CustomizationManager = ({ groups, setGroups }) => {
               className="p-2 border rounded"
               min="1"
             />
+            <div className="md:col-span-3 flex items-center gap-2">
+             <input 
+              type="checkbox" 
+              id={`required-${groupIndex}`} 
+              checked={group.isRequired !== false} // Default to true if undefined
+              onChange={(e) => handleGroupChange(groupIndex, 'isRequired', e.target.checked)} 
+             />
+              <label htmlFor={`required-${groupIndex}`}>This section is required</label>
+            </div>
           </div>
           
           <h5 className="font-semibold mb-2">Options for "{group.title || 'New Group'}"</h5>

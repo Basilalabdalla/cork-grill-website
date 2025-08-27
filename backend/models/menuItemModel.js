@@ -21,6 +21,10 @@ const customizationGroupSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  isRequired: { 
+    type: Boolean, 
+    default: true 
+  },
   options: [optionSchema],
 });
 
