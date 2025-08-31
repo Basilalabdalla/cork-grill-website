@@ -8,6 +8,7 @@ import PromotionsCarousel from '../components/PromotionsCarousel.jsx';
 import LunchDealBanner from '../components/LunchDealBanner.jsx';
 import OpeningHours from '../components/OpeningHours.jsx';
 import PopularItemsCarousel from '../components/PopularItemsCarousel.jsx';
+import MenuSkeleton from '../components/MenuSkeleton.jsx';
 
 const HomePage = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -58,8 +59,10 @@ const HomePage = () => {
     items: menuItems.filter(item => item.category === cat.name)
   }));
 
-  if (loading) return <div className="p-4 text-center text-xl">Loading...</div>;
+  if (loading) return <MenuSkeleton />;
+
   if (error) return <div className="p-4 text-center text-red-500">Error: {error}</div>;
+
 
   const isStoreOpen = homeContent?.isStoreOpen ?? true;
 

@@ -3,17 +3,38 @@ const { randomUUID } = require('crypto');
 const Order = require('../models/orderModel');
 const Promotion = require('../models/promotionModel');
 
-/* Dev
+// This client is configured for PRODUCTION.
+// For local testing, you would comment this out and use the Sandbox version.
+/*
 const squareClient = new Client({
-  environment: Environment.Sandbox, // Change to .Production for live
+  environment: Environment.Production, 
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 */
 
+// --- For Local Development ---
 const squareClient = new Client({
-  environment: Environment.Production,
+  environment: Environment.Sandbox,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
+
+// --- NEW FUNCTION ---
+// @desc    Get an order by its ID
+// @route   GET /api/orders/:id
+// @access  Public
+const getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      res.json(order);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 
 const createOrder = async (req, res) => {
   const { cartItems, customer } = req.body;
@@ -23,6 +44,7 @@ const createOrder = async (req, res) => {
   }
 
   try {
+    // Step 1: Format Line Items and find active discounts
     const lineItems = cartItems.map(item => ({
       name: item.name,
       quantity: item.qty.toString(),
@@ -45,24 +67,27 @@ const createOrder = async (req, res) => {
       });
     }
 
-    const origin = req.get('origin');
-    const redirectBaseUrl = origin || 'https://corkgrill.ie';
-
+    // Step 2: Create the Payment Link. This single API call creates the order in Square and the payment link.
     const paymentLinkResponse = await squareClient.checkoutApi.createPaymentLink({
       idempotencyKey: randomUUID(),
       order: {
         locationId: process.env.SQUARE_LOCATION_ID,
         lineItems,
         discounts,
-        note: `Online order for ${customer.name}. Phone: ${customer.phone}`,
+        note: `Online Order for: ${customer.name}. Phone: ${customer.phone}`,
       },
       checkout_options: {
-        redirect_url: `${redirectBaseUrl}/thank-you` // This now uses the correct variable
+        redirect_url: `${req.get('origin')}/order/thank-you`, // Redirect to a generic thank you page for now
+        // This tells Square to only AUTHORIZE the payment, not capture it immediately.
+        // The money will be captured when the staff accepts the order on the POS.
+        payment_note: "Your card will be charged when the restaurant accepts your order."
       }
     });
 
+    // Step 3: Get the Square Order ID from the successful response
     const squareOrderId = paymentLinkResponse.result.paymentLink.orderId;
     
+    // Step 4: Save our own record to our database, including the verification code
     const verificationCode = Math.floor(10 + Math.random() * 90).toString();
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const newOrder = new Order({
@@ -71,13 +96,16 @@ const createOrder = async (req, res) => {
       customer,
       items: cartItems.map(item => ({ name: item.name, quantity: item.qty, price: item.price, selectedOptions: item.selectedOptions })),
       totalPrice,
+      status: 'PENDING_ACCEPTANCE' // Set the initial status
     });
     await newOrder.save();
     
-    // We will update the redirect_url to point to our specific order page in the next step
-    const finalPaymentUrl = paymentLinkResponse.result.paymentLink.url;
-    
-    res.status(201).json({ paymentUrl: finalPaymentUrl, orderId: newOrder._id });
+    // Step 5: Send the payment URL and OUR order ID back to the frontend
+    // The redirect will be handled by Square, but we need our ID for the status page we'll build next.
+    res.status(201).json({ 
+      paymentUrl: paymentLinkResponse.result.paymentLink.url, 
+      orderId: newOrder._id 
+    });
 
   } catch (error) {
     console.error('CRITICAL SQUARE ERROR:', error);
@@ -85,4 +113,7 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = { createOrder };
+module.exports = { 
+  createOrder, 
+  getOrderById 
+};

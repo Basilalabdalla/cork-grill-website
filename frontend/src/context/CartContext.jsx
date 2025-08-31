@@ -90,6 +90,11 @@ export const CartProvider = ({ children }) => {
   const discountAmount = bestPromotion ? (subtotal * bestPromotion.discountValue) / 100 : 0;
   const total = subtotal - discountAmount;
 
+  const clearCart = () => {
+    setCartItems([]);
+    // The useEffect for localStorage will automatically handle saving the new empty array.
+  };
+
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
         alert("Your cart is empty!");
@@ -120,7 +125,8 @@ export const CartProvider = ({ children }) => {
     bestPromotion,
     total,
     handleCheckout,
-    cartKey, // Ensure cartKey is provided
+    cartKey,
+    clearCart, // Ensure cartKey is provided
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
