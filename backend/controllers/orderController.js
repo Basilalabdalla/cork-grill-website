@@ -5,18 +5,19 @@ const Promotion = require('../models/promotionModel');
 
 // This client is configured for PRODUCTION.
 // For local testing, you would comment this out and use the Sandbox version.
-/*
+
 const squareClient = new Client({
   environment: Environment.Production, 
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
-*/
 
-// --- For Local Development ---
+
+/*
 const squareClient = new Client({
   environment: Environment.Sandbox,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
+*/
 
 // --- NEW FUNCTION ---
 // @desc    Get an order by its ID
