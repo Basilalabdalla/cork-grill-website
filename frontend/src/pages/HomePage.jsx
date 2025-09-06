@@ -46,12 +46,32 @@ const HomePage = () => {
   
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach(entry => entry.isIntersecting && setActiveCategory(entry.target.id)),
-      { rootMargin: '-20% 0px -75% 0px' }
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveCategory(entry.target.id);
+          }
+        });
+      },
+      { 
+        // This new rootMargin creates a precise trigger point 
+        // that is 130px from the top of the screen.
+        rootMargin: '-130px 0px -70% 0px' 
+      }
     );
+    
     const refs = categoryRefs.current;
-    Object.values(refs).forEach(ref => ref && observer.observe(ref));
-    return () => Object.values(refs).forEach(ref => ref && observer.unobserve(ref));
+    const currentRefs = Object.values(refs); // Store refs in a variable
+
+    currentRefs.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      currentRefs.forEach(ref => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
   }, [menuItems, categories]);
 
   const menuByCategory = categories.map(cat => ({

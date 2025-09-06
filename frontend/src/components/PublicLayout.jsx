@@ -14,19 +14,7 @@ const PublicLayout = () => {
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow">
-          {/* AnimatePresence handles the exit animation */}
-          <AnimatePresence mode="wait">
-            {/* The key is CRITICAL. It tells Framer Motion the page has changed. */}
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 15 }}
-              transition={{ duration: 0.25 }}
-            >
               <Outlet />
-            </motion.div>
-          </AnimatePresence>
         </main>
         <Footer />
         <BackToTopButton />

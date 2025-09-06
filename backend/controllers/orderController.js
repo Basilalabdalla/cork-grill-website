@@ -78,7 +78,7 @@ const createOrder = async (req, res) => {
         note: `Online Order for: ${customer.name}. Phone: ${customer.phone}`,
       },
       checkout_options: {
-        redirect_url: `${req.get('origin')}/order/thank-you`, // Redirect to a generic thank you page for now
+        redirect_url: `https://corkgrill.ie/order/${newOrder._id}`, // Redirect to a generic thank you page for now
         // This tells Square to only AUTHORIZE the payment, not capture it immediately.
         // The money will be captured when the staff accepts the order on the POS.
         payment_note: "Your card will be charged when the restaurant accepts your order."
