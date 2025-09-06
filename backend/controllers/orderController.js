@@ -3,26 +3,21 @@ const { randomUUID } = require('crypto');
 const Order = require('../models/orderModel');
 const Promotion = require('../models/promotionModel');
 
-// This client is configured for PRODUCTION.
-// For local testing, you would comment this out and use the Sandbox version.
-
+// This client should be configured for Production on your live server.
+// For local testing, comment out the Production client and uncomment the Sandbox client.
 const squareClient = new Client({
   environment: Environment.Production, 
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 
-
 /*
+// --- For Local Development ---
 const squareClient = new Client({
   environment: Environment.Sandbox,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
 });
 */
 
-// --- NEW FUNCTION ---
-// @desc    Get an order by its ID
-// @route   GET /api/orders/:id
-// @access  Public
 const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -36,7 +31,6 @@ const getOrderById = async (req, res) => {
   }
 };
 
-
 const createOrder = async (req, res) => {
   const { cartItems, customer } = req.body;
 
@@ -45,7 +39,22 @@ const createOrder = async (req, res) => {
   }
 
   try {
-    // Step 1: Format Line Items and find active discounts
+    // --- Step 1: Create OUR order record in our database FIRST. ---
+    // This gives us a unique newOrder._id that we can use in the redirect URL.
+    const verificationCode = Math.floor(10 + Math.random() * 90).toString();
+    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    
+    const newOrder = new Order({
+      squareOrderId: 'PENDING_SQUARE_ID', // Use a placeholder until we get the real one from Square
+      verificationCode,
+      customer,
+      items: cartItems.map(item => ({ name: item.name, quantity: item.qty, price: item.price, selectedOptions: item.selectedOptions })),
+      totalPrice,
+      status: 'PENDING_ACCEPTANCE'
+    });
+    await newOrder.save();
+
+    // --- Step 2: Prepare the order details for Square. ---
     const lineItems = cartItems.map(item => ({
       name: item.name,
       quantity: item.qty.toString(),
@@ -68,41 +77,29 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // Step 2: Create the Payment Link. This single API call creates the order in Square and the payment link.
+    // --- Step 3: Create the Square Payment Link. ---
+    // Now we can safely use newOrder._id in the redirect_url.
+    const origin = req.get('origin') || 'https://corkgrill.ie'; // Set a safe fallback
     const paymentLinkResponse = await squareClient.checkoutApi.createPaymentLink({
       idempotencyKey: randomUUID(),
       order: {
         locationId: process.env.SQUARE_LOCATION_ID,
         lineItems,
         discounts,
-        note: `Online Order for: ${customer.name}. Phone: ${customer.phone}`,
+        note: `Online Order for: ${customer.name}. Phone: ${customer.phone}. Our Order ID: ${newOrder._id}`,
       },
       checkout_options: {
-        redirect_url: `https://corkgrill.ie/order/${newOrder._id}`, // Redirect to a generic thank you page for now
-        // This tells Square to only AUTHORIZE the payment, not capture it immediately.
-        // The money will be captured when the staff accepts the order on the POS.
+        redirect_url: `${origin}/order/${newOrder._id}`,
         payment_note: "Your card will be charged when the restaurant accepts your order."
       }
     });
 
-    // Step 3: Get the Square Order ID from the successful response
+    // --- Step 4: Update our order record with the official Square Order ID. ---
     const squareOrderId = paymentLinkResponse.result.paymentLink.orderId;
-    
-    // Step 4: Save our own record to our database, including the verification code
-    const verificationCode = Math.floor(10 + Math.random() * 90).toString();
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const newOrder = new Order({
-      squareOrderId,
-      verificationCode,
-      customer,
-      items: cartItems.map(item => ({ name: item.name, quantity: item.qty, price: item.price, selectedOptions: item.selectedOptions })),
-      totalPrice,
-      status: 'PENDING_ACCEPTANCE' // Set the initial status
-    });
+    newOrder.squareOrderId = squareOrderId;
     await newOrder.save();
-    
-    // Step 5: Send the payment URL and OUR order ID back to the frontend
-    // The redirect will be handled by Square, but we need our ID for the status page we'll build next.
+
+    // --- Step 5: Send the payment URL and OUR order ID back to the frontend. ---
     res.status(201).json({ 
       paymentUrl: paymentLinkResponse.result.paymentLink.url, 
       orderId: newOrder._id 
